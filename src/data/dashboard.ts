@@ -76,6 +76,26 @@ export type WorkshopConsideration = {
   expectedEvidence: string;
 };
 
+export type AreaProcessStep = {
+  id: string;
+  title: string;
+  detail: string;
+  tool: string;
+  evidence: string;
+};
+
+export type AreaProcessFlow = {
+  id: string;
+  label: string;
+  title: string;
+  intent: string;
+  riskOrControl: string;
+  lanes: {
+    lane: string;
+    steps: AreaProcessStep[];
+  }[];
+};
+
 export type Flow = {
   id: string;
   title: string;
@@ -448,6 +468,257 @@ export const workshopConsiderations: WorkshopConsideration[] = [
   },
 ];
 
+export const rfiAreaLanes = [
+  'Campo / Producción',
+  'Oficina Técnica',
+  'Área BIM',
+  'Área de Diseño',
+  'Área de Proyectos',
+  'Área de Calidad',
+];
+
+export const rfiAreaFlows: AreaProcessFlow[] = [
+  {
+    id: 'actual',
+    label: 'Proceso ejemplo actual',
+    title: 'Gestión RFI / consulta técnica como suele ocurrir',
+    intent: 'Mostrar el flujo real con fricción: canales informales, validación incompleta, respuestas dispersas y cierre débil.',
+    riskOrControl: 'Riesgo dominante: la respuesta puede existir, pero no queda trazada, validada ni comunicada como decisión oficial.',
+    lanes: [
+      {
+        lane: 'Campo / Producción',
+        steps: [
+          {
+            id: 'actual-campo-1',
+            title: 'Detecta duda en frente de obra',
+            detail: 'El residente o responsable de frente encuentra una incompatibilidad, falta de detalle o interferencia durante la ejecución.',
+            tool: 'Observación en campo, foto, plano impreso o PDF local.',
+            evidence: 'Foto y descripción parcial, muchas veces sin ubicación completa.',
+          },
+          {
+            id: 'actual-campo-2',
+            title: 'Consulta por canal informal',
+            detail: 'La duda se envía por WhatsApp, llamada o correo directo para resolver rápido.',
+            tool: 'WhatsApp / llamada / correo.',
+            evidence: 'Mensaje no estructurado; difícil de auditar o reutilizar.',
+          },
+        ],
+      },
+      {
+        lane: 'Oficina Técnica',
+        steps: [
+          {
+            id: 'actual-ot-1',
+            title: 'Recibe consulta incompleta',
+            detail: 'Revisa si la duda tiene plano, ubicación, especialidad, impacto, frente y foto suficiente.',
+            tool: 'Correo, Excel, carpeta compartida o conversación previa.',
+            evidence: 'Registro parcial o reenvío de mensaje.',
+          },
+          {
+            id: 'actual-ot-2',
+            title: 'Reenvía a área técnica',
+            detail: 'Escala a BIM, Diseño o Proyectos sin siempre definir SLA, prioridad ni responsable único.',
+            tool: 'Correo o mensaje directo.',
+            evidence: 'Cadena de correos sin estado único.',
+          },
+        ],
+      },
+      {
+        lane: 'Área BIM',
+        steps: [
+          {
+            id: 'actual-bim-1',
+            title: 'Busca modelo o plano vigente',
+            detail: 'Verifica si el modelo, planos o interferencias explican la duda, pero puede no quedar conectado al log.',
+            tool: 'Modelo BIM, planos, Autodesk Docs o archivos locales.',
+            evidence: 'Captura o comentario técnico no necesariamente centralizado.',
+          },
+          {
+            id: 'actual-bim-2',
+            title: 'Responde hallazgo técnico',
+            detail: 'Indica si hay interferencia, versión incorrecta o necesidad de consultar diseño.',
+            tool: 'Captura BIM, correo o reunión rápida.',
+            evidence: 'Evidencia BIM dispersa o sin código de consulta.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Diseño',
+        steps: [
+          {
+            id: 'actual-diseno-1',
+            title: 'Analiza consulta con contexto variable',
+            detail: 'Recibe la duda con información desigual y debe reconstruir el problema antes de responder.',
+            tool: 'Correo, planos, especificaciones, modelo o reunión.',
+            evidence: 'Respuesta técnica sin plantilla uniforme.',
+          },
+          {
+            id: 'actual-diseno-2',
+            title: 'Emite respuesta técnica',
+            detail: 'Responde por correo o mensaje; no siempre queda claro si es consulta simple, RFI o cambio formal.',
+            tool: 'Correo / PDF / comentario sobre plano.',
+            evidence: 'Respuesta no siempre asociada a código, estado o criterio de impacto.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Proyectos',
+        steps: [
+          {
+            id: 'actual-proyectos-1',
+            title: 'Evalúa impacto tarde',
+            detail: 'Proyectos puede enterarse cuando la duda ya generó espera, restricción, retrabajo o impacto de plazo/costo.',
+            tool: 'Reunión, reporte semanal o escalamiento puntual.',
+            evidence: 'Acuerdo verbal o acción correctiva no siempre ligada al RFI.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Calidad',
+        steps: [
+          {
+            id: 'actual-calidad-1',
+            title: 'Recibe evidencia después',
+            detail: 'Calidad revisa registros, fotos o cierre cuando el problema ya fue atendido operativamente.',
+            tool: 'Carpeta documental, reportes, protocolos o evidencias sueltas.',
+            evidence: 'Archivo parcial; difícil comprobar trazabilidad completa.',
+          },
+          {
+            id: 'actual-calidad-2',
+            title: 'Cierre débil',
+            detail: 'La consulta se da por cerrada porque alguien respondió, no porque exista criterio auditable de cierre.',
+            tool: 'Excel, correo o memoria de reunión.',
+            evidence: 'Estado final ambiguo o sin comunicación oficial al frente.',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'mejorado',
+    label: 'Proceso propuesto mejorado',
+    title: 'Gestión RFI / consulta técnica estandarizada',
+    intent: 'Convertir la duda técnica en flujo controlado con formulario, responsable, SLA, evidencia, decisión de impacto y cierre verificable.',
+    riskOrControl: 'Control dominante: toda consulta tiene código, responsable, estado, evidencia, comunicación oficial y criterio de cierre.',
+    lanes: [
+      {
+        lane: 'Campo / Producción',
+        steps: [
+          {
+            id: 'mejorado-campo-1',
+            title: 'Detecta y registra la duda',
+            detail: 'Campo inicia la consulta desde un formato único con frente, ubicación, especialidad, actividad afectada e impacto esperado.',
+            tool: 'Formulario CDE/Build desde obra.',
+            evidence: 'Código de consulta, foto, ubicación, plano/modelo referenciado y descripción del impacto.',
+          },
+          {
+            id: 'mejorado-campo-2',
+            title: 'Adjunta evidencia mínima',
+            detail: 'La consulta no avanza si falta información crítica para que Oficina Técnica pueda validarla.',
+            tool: 'Formulario con campos obligatorios.',
+            evidence: 'Checklist de completitud inicial.',
+          },
+        ],
+      },
+      {
+        lane: 'Oficina Técnica',
+        steps: [
+          {
+            id: 'mejorado-ot-1',
+            title: 'Valida completitud y clasifica',
+            detail: 'Revisa si la consulta es simple, RFI formal, cambio potencial o restricción de obra.',
+            tool: 'Log maestro de consultas / CDE.',
+            evidence: 'Estado, clasificación, prioridad, responsable y fecha objetivo.',
+          },
+          {
+            id: 'mejorado-ot-2',
+            title: 'Asigna responsable y SLA',
+            detail: 'Deriva al área correcta con plazo, criterio de respuesta y ruta de escalamiento.',
+            tool: 'Tablero de estados y alertas.',
+            evidence: 'Owner asignado, SLA, fecha de revisión y trazabilidad de derivación.',
+          },
+        ],
+      },
+      {
+        lane: 'Área BIM',
+        steps: [
+          {
+            id: 'mejorado-bim-1',
+            title: 'Verifica modelo, versión e interferencia',
+            detail: 'Confirma si la duda se resuelve con información vigente o si hay conflicto entre modelo, plano y obra.',
+            tool: 'Modelo BIM, Autodesk Docs, visor/model coordination.',
+            evidence: 'Captura BIM, versión consultada, coordenada/frente y hallazgo técnico.',
+          },
+          {
+            id: 'mejorado-bim-2',
+            title: 'Adjunta soporte BIM al expediente',
+            detail: 'El análisis BIM queda vinculado al código de consulta y no como captura aislada.',
+            tool: 'CDE / registro de consulta.',
+            evidence: 'Soporte BIM anexado al log y disponible para Diseño/Proyectos/Calidad.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Diseño',
+        steps: [
+          {
+            id: 'mejorado-diseno-1',
+            title: 'Emite respuesta técnica sustentada',
+            detail: 'Diseño responde con criterio técnico, documento soporte, restricción y alcance de la solución.',
+            tool: 'Plantilla de respuesta técnica.',
+            evidence: 'Respuesta oficial vinculada a plano/modelo/especificación.',
+          },
+          {
+            id: 'mejorado-diseno-2',
+            title: 'Define si requiere cambio de diseño',
+            detail: 'Si modifica diseño, especificación o solución aprobada, se marca para evaluación de Proyectos.',
+            tool: 'Criterio de impacto técnico.',
+            evidence: 'Decisión explícita: consulta simple, RFI/SDI o cambio formal.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Proyectos',
+        steps: [
+          {
+            id: 'mejorado-proyectos-1',
+            title: 'Evalúa impacto costo/plazo/alcance',
+            detail: 'Determina si la respuesta afecta cronograma, presupuesto, contrato, alcance, seguridad o producción.',
+            tool: 'Matriz de impacto y tablero de restricciones.',
+            evidence: 'Impacto registrado, decisión de escalamiento y aprobación si aplica.',
+          },
+          {
+            id: 'mejorado-proyectos-2',
+            title: 'Autoriza derivación formal',
+            detail: 'Cuando corresponde, deriva a RFI/SDI/cambio formal con control contractual y responsable.',
+            tool: 'Flujo formal de cambios / RFI.',
+            evidence: 'ID RFI/SDI, aprobador, responsable y fecha de compromiso.',
+          },
+        ],
+      },
+      {
+        lane: 'Área de Calidad',
+        steps: [
+          {
+            id: 'mejorado-calidad-1',
+            title: 'Verifica evidencia y comunicación',
+            detail: 'Confirma que la respuesta fue comunicada al frente correcto y que la evidencia cumple el estándar.',
+            tool: 'Checklist de cierre y repositorio CDE.',
+            evidence: 'Comunicación oficial, lista de distribución, soporte y evidencia de aplicación.',
+          },
+          {
+            id: 'mejorado-calidad-2',
+            title: 'Cierra y mide el proceso',
+            detail: 'Cierra solo si hay respuesta, soporte, comunicación, estado final y responsable de cierre.',
+            tool: 'Tablero KPI semanal.',
+            evidence: 'Estado cerrado, fecha, responsable, tiempo de respuesta y causa raíz si hubo demora.',
+          },
+        ],
+      },
+    ],
+  },
+];
+
 export const mappingSteps: MappingStep[] = [
   {
     id: 'elegir-proceso',
@@ -461,9 +732,9 @@ export const mappingSteps: MappingStep[] = [
     id: 'swimlanes',
     title: 'Definir swimlanes o involucrados',
     teacher: 'Los swimlanes ordenan la responsabilidad. Deben representar roles funcionales, no personas sueltas ni áreas ambiguas.',
-    output: 'Lista de carriles: Campo/Producción, Oficina Técnica/BIM, Proyectista/Especialista, CDE/Documentación, Supervisión/Gerencia si aplica.',
+    output: 'Lista de carriles: Campo/Producción, Oficina Técnica, Área BIM, Área de Diseño, Área de Proyectos y Área de Calidad.',
     prompt: '¿Qué rol inicia, recibe, valida, decide, responde, comunica y cierra?',
-    example: 'Campo detecta la duda; Oficina Técnica/BIM registra y valida; Especialista responde; CDE documenta; Gerencia/Supervisión escala impactos mayores.',
+    example: 'Campo detecta; Oficina Técnica valida; BIM verifica modelo; Diseño responde; Proyectos evalúa impacto; Calidad verifica evidencia y cierre.',
   },
   {
     id: 'pasos-sin-orden',
@@ -479,7 +750,7 @@ export const mappingSteps: MappingStep[] = [
     teacher: 'Un paso sin rol no se puede gestionar. El mapa debe mostrar handoffs claros entre quien solicita, valida, responde y documenta.',
     output: 'Cada actividad ubicada en su swimlane correspondiente.',
     prompt: '¿Quién hace realmente este paso hoy y quién debería hacerlo en el flujo estándar?',
-    example: '“Registrar consulta” pertenece a Oficina Técnica/BIM; “emitir respuesta técnica” pertenece al Proyectista/Especialista; “guardar evidencia” pertenece a CDE.',
+    example: '“Registrar consulta” pertenece a Oficina Técnica; “verificar modelo” al Área BIM; “emitir respuesta técnica” al Área de Diseño; “cerrar con evidencia” al Área de Calidad.',
   },
   {
     id: 'ordenar-flechas',
@@ -552,16 +823,16 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'revision',
-    lane: 'Campo / Producción',
+    lane: 'Área BIM',
     title: 'Revisar información disponible',
     type: 'activity',
-    summary: 'Antes de escalar, se revisan planos, especificaciones, reportes y documentos existentes.',
+    summary: 'BIM revisa modelo, planos, especificaciones, reportes y documentos vigentes para confirmar si la duda ya tiene respuesta.',
     evidence: ['Documento revisado', 'Versión consultada', 'Resultado de revisión'],
     risk: 'Se escalan dudas que ya estaban respondidas o se usa una versión obsoleta.',
   },
   {
     id: 'resuelve',
-    lane: 'Campo / Producción',
+    lane: 'Oficina Técnica',
     title: '¿Se resuelve con información disponible?',
     type: 'decision',
     summary: 'Si la información vigente responde la duda, se registra la solución. Si no, se crea consulta formal.',
@@ -570,7 +841,7 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'registro',
-    lane: 'Oficina Técnica / BIM',
+    lane: 'Oficina Técnica',
     title: 'Registrar consulta en CDE/Build',
     type: 'activity',
     summary: 'La consulta se formaliza con código, fecha, frente, ubicación, especialidad, descripción, impacto y adjuntos.',
@@ -579,7 +850,7 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'validar',
-    lane: 'Oficina Técnica / BIM',
+    lane: 'Oficina Técnica',
     title: 'Validar consulta y asignar responsable',
     type: 'activity',
     summary: 'Oficina técnica revisa completitud, clasifica la consulta y asigna responsable y plazo de respuesta.',
@@ -588,7 +859,7 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'completa',
-    lane: 'Oficina Técnica / BIM',
+    lane: 'Oficina Técnica',
     title: '¿Consulta completa y válida?',
     type: 'decision',
     summary: 'Si faltan datos, se solicita información. Si está completa, pasa al análisis técnico.',
@@ -597,7 +868,7 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'info',
-    lane: 'Oficina Técnica / BIM',
+    lane: 'Oficina Técnica',
     title: 'Solicitar respuesta o información',
     type: 'activity',
     summary: 'Se pide información faltante a campo o respuesta técnica al especialista, según corresponda.',
@@ -606,25 +877,25 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'analisis',
-    lane: 'Proyectista / Especialista',
+    lane: 'Área de Diseño',
     title: 'Analizar consulta y emitir respuesta técnica',
     type: 'activity',
-    summary: 'El especialista revisa soporte, modelo, planos y criterios técnicos para emitir respuesta sustentada.',
+    summary: 'Diseño revisa soporte, modelo, planos y criterios técnicos para emitir una respuesta sustentada.',
     evidence: ['Respuesta técnica', 'Documento soporte', 'Restricciones'],
     risk: 'La respuesta puede ser técnicamente correcta, pero no trazable ni comunicada.',
   },
   {
     id: 'impacto',
-    lane: 'Proyectista / Especialista',
+    lane: 'Área de Proyectos',
     title: '¿Requiere cambio formal o impacto mayor?',
     type: 'decision',
-    summary: 'Si impacta costo, plazo, diseño, calidad o seguridad, se deriva a RFI/SDI o cambio formal.',
+    summary: 'Proyectos evalúa si la respuesta impacta costo, plazo, alcance, diseño, calidad o seguridad.',
     evidence: ['Criterio de impacto', 'Derivación', 'Aprobación requerida'],
     risk: 'Un cambio de diseño puede ejecutarse como simple consulta.',
   },
   {
     id: 'derivar',
-    lane: 'Proyectista / Especialista',
+    lane: 'Área de Proyectos',
     title: 'Derivar a flujo RFI/SDI',
     type: 'activity',
     summary: 'La consulta se transforma en flujo formal con control de impacto, aprobación y comunicación oficial.',
@@ -633,16 +904,16 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'resolucion',
-    lane: 'CDE / Documentación',
+    lane: 'Área de Calidad',
     title: 'Registrar resolución para trazabilidad',
     type: 'document',
-    summary: 'La respuesta, soporte, decisión y evidencias se guardan en el repositorio documental.',
+    summary: 'Calidad verifica que la respuesta, soporte, decisión y evidencias queden guardadas en el repositorio documental.',
     evidence: ['Respuesta adjunta', 'Historial', 'Estado actualizado'],
     risk: 'Responder sin registrar deja el conocimiento fuera del sistema.',
   },
   {
     id: 'comunicar',
-    lane: 'CDE / Documentación',
+    lane: 'Área de Calidad',
     title: 'Comunicar solución al equipo',
     type: 'activity',
     summary: 'Se comunica oficialmente la respuesta a campo, producción y áreas afectadas.',
@@ -651,7 +922,7 @@ export const rfiNodes: ProcessNode[] = [
   },
   {
     id: 'cierre',
-    lane: 'Oficina Técnica / BIM',
+    lane: 'Área de Calidad',
     title: 'Cierre de consulta',
     type: 'end',
     summary: 'La consulta queda cerrada solo si tiene respuesta oficial, evidencia, comunicación y estado final.',
@@ -676,7 +947,7 @@ export const processSheet = [
   ['Problema que resuelve', 'Demoras, pérdida de trazabilidad y respuestas informales ante dudas técnicas de campo.'],
   ['Inicio', 'Detección de duda técnica, inconsistencia, interferencia o falta de información en obra.'],
   ['Fin', 'Consulta cerrada con respuesta oficial, comunicación al equipo y evidencia registrada.'],
-  ['Roles', 'Campo, Oficina Técnica/BIM, Proyectista/Especialista, CDE/Documentación, Supervisión/Gerencia.'],
+  ['Roles', 'Campo/Producción, Oficina Técnica, Área BIM, Área de Diseño, Área de Proyectos y Área de Calidad.'],
   ['Documentos de entrada', 'Planos, especificaciones, fotos, reportes, modelo, documentos contractuales e historial de consultas.'],
   ['Entregables', 'Registro de consulta, respuesta técnica, evidencia, comunicación oficial y cierre documentado.'],
   ['Dolores actuales', 'Consultas incompletas, respuestas tardías, canales informales, falta de responsable y falta de cierre.'],
@@ -691,7 +962,7 @@ export const flows: Flow[] = [
   {
     id: 'consulta-rfi',
     title: 'Gestión de consultas técnicas / RFI',
-    owner: 'Campo + Oficina Técnica/BIM + Especialista + CDE',
+    owner: 'Campo + Oficina Técnica + BIM + Diseño + Proyectos + Calidad',
     priority: 'Caso principal',
     currentPain: 'Consultas incompletas, canales informales, respuestas no oficiales, falta de responsable, cierre verbal y poca trazabilidad.',
     targetOutcome: 'Consulta/RFI con código, datos mínimos, responsable, SLA, análisis técnico, decisión de impacto, respuesta oficial y cierre documentado.',
@@ -701,10 +972,12 @@ export const flows: Flow[] = [
     outputs: ['Respuesta técnica', 'Registro de consulta', 'Evidencia', 'Historial y control', 'RFI/SDI si aplica'],
     metrics: ['Tiempo de respuesta', '% consultas completas', '% con evidencia', '% cerradas', 'Duplicadas', 'Vencidas'],
     lanes: [
-      { lane: 'Campo / Producción', steps: ['Detectar duda', 'Revisar planos/documentos', 'Confirmar si se resuelve'] },
-      { lane: 'Oficina Técnica / BIM', steps: ['Registrar en CDE/Build', 'Validar y asignar plazo', 'Solicitar respuesta o información'] },
-      { lane: 'Proyectista / Especialista', steps: ['Analizar consulta', 'Emitir respuesta técnica', 'Derivar a RFI/SDI si impacta'] },
-      { lane: 'CDE / Documentación', steps: ['Registrar resolución', 'Comunicar al equipo', 'Cerrar con evidencia'] },
+      { lane: 'Campo / Producción', steps: ['Detectar duda', 'Levantar evidencia', 'Registrar solicitud inicial'] },
+      { lane: 'Oficina Técnica', steps: ['Validar completitud', 'Clasificar consulta', 'Asignar responsable y SLA'] },
+      { lane: 'Área BIM', steps: ['Verificar modelo/plano vigente', 'Revisar interferencias', 'Adjuntar soporte BIM'] },
+      { lane: 'Área de Diseño', steps: ['Analizar técnicamente', 'Emitir respuesta sustentada', 'Definir si cambia diseño'] },
+      { lane: 'Área de Proyectos', steps: ['Evaluar impacto costo/plazo/alcance', 'Autorizar RFI/SDI si aplica', 'Gestionar escalamiento'] },
+      { lane: 'Área de Calidad', steps: ['Verificar evidencia', 'Comunicar solución oficial', 'Cerrar y medir'] },
     ],
     instructorQuestions: [
       '¿Qué dato mínimo debe traer una consulta para no rebotar?',
@@ -725,10 +998,12 @@ export const flows: Flow[] = [
     outputs: ['Plano vigente', 'Historial de revisión', 'Lista de distribución', 'Registro de cambios'],
     metrics: ['% planos vigentes', 'Planos obsoletos detectados', 'Tiempo de aprobación', 'Cambios por disciplina'],
     lanes: [
-      { lane: 'Diseño / BIM', steps: ['Emite revisión', 'Responde observaciones', 'Confirma paquete'] },
-      { lane: 'Control documentario', steps: ['Valida código', 'Publica en CDE', 'Marca obsoleto'] },
+      { lane: 'Campo / Producción', steps: ['Consulta vigente', 'Ejecuta con referencia', 'Reporta conflicto'] },
       { lane: 'Oficina Técnica', steps: ['Revisa impacto', 'Comunica cambios', 'Actualiza log'] },
-      { lane: 'Campo', steps: ['Consulta vigente', 'Ejecuta con referencia', 'Reporta conflicto'] },
+      { lane: 'Área BIM', steps: ['Valida modelo', 'Coordina interferencias', 'Publica soporte'] },
+      { lane: 'Área de Diseño', steps: ['Emite revisión', 'Responde observaciones', 'Confirma paquete'] },
+      { lane: 'Área de Proyectos', steps: ['Evalúa impacto', 'Autoriza emisión', 'Controla plazo'] },
+      { lane: 'Área de Calidad', steps: ['Valida código', 'Publica en CDE', 'Marca obsoleto'] },
     ],
     instructorQuestions: [
       '¿Cuál es la fuente única de verdad de un plano vigente?',

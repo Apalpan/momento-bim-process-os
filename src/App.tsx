@@ -31,6 +31,8 @@ import {
   painDiagnostics,
   painSignals,
   processSheet,
+  rfiAreaFlows,
+  rfiAreaLanes,
   rfiMetrics,
   rfiNodes,
   standardLayers,
@@ -65,7 +67,7 @@ const toneIcon: Record<Tone, string> = {
   slate: 'bg-slate',
 };
 
-const laneOrder = ['Campo / Producción', 'Oficina Técnica / BIM', 'Proyectista / Especialista', 'CDE / Documentación'];
+const laneOrder = rfiAreaLanes;
 
 function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('resumen');
@@ -519,7 +521,7 @@ function RfiCaseSection({
         icon={GitBranch}
         eyebrow="Caso principal"
         title="Análisis del proceso de gestión de consultas técnicas / RFI"
-        text="El caso permite enseñar cómo una duda de campo se transforma en información controlada: registro, validación, análisis, posible RFI/SDI, respuesta oficial, comunicación y cierre."
+        text="El caso permite comparar cómo ocurre hoy una consulta técnica y cómo debería mejorar, distribuyendo responsabilidades entre Campo/Producción, Oficina Técnica, BIM, Diseño, Proyectos y Calidad."
       />
 
       <div className="dashboard-grid dashboard-grid--two">
@@ -551,6 +553,8 @@ function RfiCaseSection({
         </div>
       </div>
 
+      <AreaFlowComparison />
+
       <RfiProcessBoard activeNodeId={activeNodeId} setActiveNodeId={setActiveNodeId} />
 
       <div className="case-columns">
@@ -572,6 +576,49 @@ function RfiCaseSection({
         </article>
       </div>
     </section>
+  );
+}
+
+function AreaFlowComparison() {
+  return (
+    <div className="panel">
+      <PanelHeader icon={Workflow} label="Proceso ejemplo vs. propuesto" title="Gestión RFI por áreas involucradas" />
+      <div className="area-comparison-grid">
+        {rfiAreaFlows.map((flow) => (
+          <article className={`area-flow-card area-flow-card--${flow.id}`} key={flow.id}>
+            <div className="area-flow-head">
+              <span>{flow.label}</span>
+              <h3>{flow.title}</h3>
+              <p>{flow.intent}</p>
+              <strong>{flow.riskOrControl}</strong>
+            </div>
+            <div className="area-lane-map">
+              {flow.lanes.map((lane) => (
+                <div className="area-lane-row" key={`${flow.id}-${lane.lane}`}>
+                  <strong>{lane.lane}</strong>
+                  <div className="area-step-list">
+                    {lane.steps.map((step) => (
+                      <article className="area-step" key={step.id}>
+                        <h4>{step.title}</h4>
+                        <p>{step.detail}</p>
+                        <div>
+                          <span>Herramienta</span>
+                          <em>{step.tool}</em>
+                        </div>
+                        <div>
+                          <span>Evidencia</span>
+                          <em>{step.evidence}</em>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -898,10 +945,10 @@ function WorkshopSection() {
         <PanelHeader icon={Workflow} label="Entregable de grupo" title="Mapa mejorado del caso RFI" />
         <div className="case-improvement-board">
           {[
-            ['Mapa actual', 'Flujo real con chats, correos, pasos omitidos, retornos, esperas y responsables difusos.'],
-            ['Mapa objetivo', 'Flujo con CDE como fuente oficial, campos obligatorios, estados, responsables y decisiones Sí/No.'],
-            ['Estándar mínimo', 'Formulario de consulta, log, matriz RACI, nomenclatura, evidencia por paso y criterio de cierre.'],
-            ['Control semanal', 'Revisión de abiertas, vencidas, incompletas, duplicadas, derivadas a RFI/SDI y restricciones asociadas.'],
+            ['Mapa actual', 'Flujo real por Campo, Oficina Técnica, BIM, Diseño, Proyectos y Calidad con chats, correos, retornos y responsables difusos.'],
+            ['Mapa objetivo', 'Flujo mejorado con CDE como fuente oficial, campos obligatorios, estados, responsables y decisiones Sí/No por área.'],
+            ['Estándar mínimo', 'Formulario de consulta, log, matriz RACI por área, nomenclatura, evidencia por paso y criterio de cierre.'],
+            ['Control semanal', 'Revisión por Oficina Técnica/Proyectos/Calidad de abiertas, vencidas, incompletas, derivadas a RFI/SDI y restricciones.'],
           ].map(([title, text]) => (
             <article key={title}>
               <span>{title}</span>
