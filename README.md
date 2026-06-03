@@ -1,16 +1,29 @@
 # MOMENTO BIM Process OS
 
-Workbench GEN+ para mapeo de procesos BIM, gestion de RFIs/consultas tecnicas y adopcion ECD/CDE en MOMENTO.
+Workbench GEN+ para mapeo de procesos BIM, diagnostico del dolor operativo, gestion de RFIs/consultas tecnicas y estandarizacion CDE/ECD en MOMENTO.
 
 ## Producto
 
 Este repo no pertenece a TrainerMath. Es un producto independiente para:
 
 - explicar por que se mapean procesos en obra;
+- mostrar que el mapa no es un diagrama bonito, sino una herramienta para detectar dolor, riesgo, espera, reproceso y falta de evidencia;
+- diagnosticar dolores tipicos: canales informales, informacion incompleta, responsable difuso, versiones no vigentes, cierre debil y mejora no sostenida;
 - analizar el caso principal de gestion de consultas tecnicas / RFI;
 - enseñar paso a paso como mapear un proceso;
-- convertir dolores operativos en flujos, responsables, documentos, evidencias y metricas;
+- convertir dolores operativos en flujos, responsables, documentos, evidencias, reglas y metricas;
+- explicar como mejorar un proceso con palancas de eliminar, simplificar, estandarizar, digitalizar, automatizar y controlar;
+- guiar la estandarizacion con ficha de proceso, formulario, estados, matriz RACI, CDE y gobierno semanal;
 - preparar la configuracion posterior en Autodesk Docs / Build / CDE.
+
+## Modulos interactivos
+
+- Diagnostico del dolor: seleccion de sintomas y lectura de impacto, senal en el mapa, mejora, estandar y metrica.
+- Mapeador interactivo: metodo de 10 pasos conectado con el flujo RFI y nodos clickeables por carril.
+- Caso RFI: procedimiento completo de gestion de consultas tecnicas en obra.
+- Mejora y estandar: laboratorio de rediseño, checklist de madurez y capas minimas para implementar el estandar.
+- Metricas y ficha: indicadores de control y ficha final que debe entregar cada equipo.
+- Guia docente: dinamica de taller para que participantes mapeen procesos reales.
 
 ## Ejecutar
 

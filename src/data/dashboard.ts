@@ -27,6 +27,46 @@ export type ProcessNode = {
   risk: string;
 };
 
+export type PainDiagnostic = {
+  id: string;
+  pain: string;
+  symptom: string;
+  whatHappens: string;
+  whyItMatters: string;
+  mapSignal: string;
+  improvement: string;
+  standard: string;
+  metric: string;
+  rfiExample: string;
+};
+
+export type ImprovementLever = {
+  id: string;
+  title: string;
+  intent: string;
+  from: string;
+  to: string;
+  how: string[];
+  rfiExample: string;
+};
+
+export type StandardLayer = {
+  id: string;
+  title: string;
+  purpose: string;
+  artifact: string;
+  rule: string;
+  owner: string;
+  validation: string;
+};
+
+export type MaturityLevel = {
+  level: string;
+  title: string;
+  description: string;
+  evidence: string;
+};
+
 export type Flow = {
   id: string;
   title: string;
@@ -124,6 +164,228 @@ export const painSignals = [
   'El CDE se actualiza después del problema, no durante el flujo.',
   'El cierre depende de memoria personal y no de evidencia trazable.',
   'Gerencia se entera cuando el problema ya impactó costo, plazo o calidad.',
+];
+
+export const painDiagnostics: PainDiagnostic[] = [
+  {
+    id: 'canal-informal',
+    pain: 'Canales informales',
+    symptom: 'La consulta nace en WhatsApp, llamada o pasillo y luego nadie sabe cuál fue la respuesta oficial.',
+    whatHappens: 'El proceso existe, pero vive fuera del sistema. La información se mueve más rápido que la trazabilidad.',
+    whyItMatters: 'Una decisión informal puede convertirse en reproceso, reclamo contractual, ejecución con plano incorrecto o pérdida de aprendizaje.',
+    mapSignal: 'Flechas que salen del flujo formal, actividades sin documento de soporte y cierres que dependen de una persona.',
+    improvement: 'Crear un único punto de entrada: formulario de consulta técnica con código, adjuntos y responsable.',
+    standard: 'Toda consulta que impacte ejecución debe registrarse en CDE antes de ser respondida.',
+    metric: '% consultas registradas en CDE vs. consultas detectadas en campo.',
+    rfiExample: 'El residente pregunta por chat si puede modificar un detalle. El mapa debe obligar registro antes de ejecutar.',
+  },
+  {
+    id: 'input-incompleto',
+    pain: 'Información incompleta',
+    symptom: 'La oficina técnica devuelve la consulta porque falta ubicación, foto, plano, especialidad o descripción del impacto.',
+    whatHappens: 'La consulta avanza y retrocede. El especialista pierde tiempo interpretando el problema en vez de resolverlo.',
+    whyItMatters: 'Cada rebote aumenta plazo, baja confianza y puede detener una cuadrilla completa.',
+    mapSignal: 'Bucles de retorno, esperas y decisiones del tipo: ¿consulta completa y válida?',
+    improvement: 'Definir campos obligatorios y checklist de completitud antes de asignar responsable.',
+    standard: 'Sin ubicación, especialidad, documento de referencia, descripción y evidencia, la consulta no cambia a estado “en análisis”.',
+    metric: '% consultas completas al primer registro.',
+    rfiExample: 'Consulta estructural sin eje/nivel ni foto. El flujo debe volver a campo antes de llegar al proyectista.',
+  },
+  {
+    id: 'responsable-ausente',
+    pain: 'Responsable difuso',
+    symptom: 'Todos saben que hay una duda, pero nadie tiene dueño, plazo ni siguiente acción.',
+    whatHappens: 'La consulta queda abierta por inercia. El seguimiento depende de urgencias o memoria.',
+    whyItMatters: 'Sin dueño no hay gestión, escalamiento ni rendición de cuentas.',
+    mapSignal: 'Actividades sin carril claro, decisiones sin aprobador y tareas que cruzan roles sin handoff.',
+    improvement: 'Asignar responsable, plazo de respuesta y ruta de escalamiento desde el registro.',
+    standard: 'Toda consulta debe tener owner, SLA, estado y fecha de revisión.',
+    metric: '% consultas con responsable y plazo asignado.',
+    rfiExample: 'Oficina técnica registra la duda, pero no define si responde BIM, proyectista o supervisión.',
+  },
+  {
+    id: 'version-obsoleta',
+    pain: 'Información no vigente',
+    symptom: 'Campo consulta o ejecuta con una versión de plano/modelo diferente a la publicada oficialmente.',
+    whatHappens: 'El proceso de consulta se contamina porque la fuente de información inicial no es confiable.',
+    whyItMatters: 'Una respuesta correcta sobre un documento obsoleto sigue siendo una mala decisión.',
+    mapSignal: 'Inputs sin versión, revisión documental sin fuente única y ausencia de control de obsolescencia.',
+    improvement: 'Conectar el flujo RFI con control documental: versión, estado, paquete y link oficial.',
+    standard: 'Toda consulta debe referenciar documento vigente desde CDE; si usa otra fuente, se marca como riesgo.',
+    metric: 'N° consultas asociadas a documentos obsoletos.',
+    rfiExample: 'La duda se genera por un plano impreso antiguo. El mapa debe capturar versión consultada.',
+  },
+  {
+    id: 'cierre-debil',
+    pain: 'Cierre sin evidencia',
+    symptom: 'La respuesta se comunica, pero no queda claro si fue aplicada, difundida ni cerrada oficialmente.',
+    whatHappens: 'El proceso termina en conversación, no en aprendizaje trazable.',
+    whyItMatters: 'La misma duda vuelve a aparecer y gerencia no puede auditar decisiones técnicas.',
+    mapSignal: 'Fin del proceso sin entregable, sin repositorio, sin estado cerrado y sin comunicación oficial.',
+    improvement: 'Definir criterios de cierre: respuesta, soporte, comunicación, estado y responsable.',
+    standard: 'Una consulta solo se cierra si tiene evidencia completa y fecha de comunicación al equipo afectado.',
+    metric: '% consultas cerradas con evidencia completa.',
+    rfiExample: 'El especialista respondió por correo, pero la solución no se guardó ni se comunicó al frente afectado.',
+  },
+  {
+    id: 'mejora-no-sostenida',
+    pain: 'Mejora que no se sostiene',
+    symptom: 'El equipo acuerda mejorar el flujo, pero a las dos semanas vuelve al hábito anterior.',
+    whatHappens: 'El mapa se queda como taller, no como sistema operativo.',
+    whyItMatters: 'Sin estándar, métrica y dueño, la adopción BIM se vuelve capacitación sin cambio operativo.',
+    mapSignal: 'No existen indicadores, frecuencia de revisión, tablero, propietario del proceso ni acciones correctivas.',
+    improvement: 'Convertir el mapa en estándar: log, estados, roles, formularios, tablero y revisión semanal.',
+    standard: 'Todo proceso crítico debe tener ficha, métrica principal, owner y ritual de control.',
+    metric: 'Cumplimiento semanal del flujo estándar.',
+    rfiExample: 'Se define el flujo RFI, pero nadie revisa vencidas, incompletas, duplicadas ni restricciones abiertas.',
+  },
+];
+
+export const improvementLevers: ImprovementLever[] = [
+  {
+    id: 'eliminar',
+    title: 'Eliminar',
+    intent: 'Quitar pasos que no agregan valor ni reducen riesgo.',
+    from: 'Revisiones duplicadas, envíos paralelos, aprobaciones informales.',
+    to: 'Un solo registro, una ruta de validación y una fuente oficial.',
+    how: ['Eliminar canales paralelos', 'Eliminar campos que nadie usa', 'Eliminar aprobaciones sin criterio'],
+    rfiExample: 'No duplicar la consulta en correo, Excel y chat; el CDE es el registro maestro.',
+  },
+  {
+    id: 'simplificar',
+    title: 'Simplificar',
+    intent: 'Reducir fricción para que el equipo sí use el proceso.',
+    from: 'Formulario largo, estados confusos y responsables ambiguos.',
+    to: 'Campos mínimos, estados entendibles y decisión simple de escalamiento.',
+    how: ['Agrupar campos por decisión', 'Reducir estados a los necesarios', 'Usar lenguaje de obra'],
+    rfiExample: 'Separar consulta simple, RFI formal y cambio mayor con tres criterios visibles.',
+  },
+  {
+    id: 'estandarizar',
+    title: 'Estandarizar',
+    intent: 'Convertir buenas prácticas en reglas repetibles.',
+    from: 'Cada frente registra y responde de una manera diferente.',
+    to: 'Código, plantilla, estados, roles, SLA y evidencia obligatoria.',
+    how: ['Crear ficha de proceso', 'Definir nomenclatura', 'Definir checklist de completitud'],
+    rfiExample: 'Todo RFI debe tener código, ubicación, especialidad, documento fuente, impacto y adjuntos.',
+  },
+  {
+    id: 'digitalizar',
+    title: 'Digitalizar',
+    intent: 'Llevar el estándar al CDE para hacerlo visible y auditable.',
+    from: 'Registro manual disperso y seguimiento por memoria.',
+    to: 'Formulario, log, tablero de estados, repositorio y alertas.',
+    how: ['Configurar formulario en CDE/Build', 'Crear log de consultas', 'Publicar tablero de vencidas'],
+    rfiExample: 'Estado automático: registrada, incompleta, en análisis, respondida, derivada, cerrada.',
+  },
+  {
+    id: 'automatizar',
+    title: 'Automatizar',
+    intent: 'Acelerar seguimiento sin perder control humano.',
+    from: 'Recordatorios manuales y búsqueda de responsables.',
+    to: 'Alertas por SLA, campos obligatorios, asignación sugerida y reportes periódicos.',
+    how: ['Alertas de vencimiento', 'Validaciones de campos', 'Resumen semanal de RFIs abiertas'],
+    rfiExample: 'Si una consulta pasa 48 horas sin responsable, se marca en riesgo y se escala.',
+  },
+  {
+    id: 'controlar',
+    title: 'Controlar',
+    intent: 'Hacer que el proceso mejore con datos, no con percepciones.',
+    from: 'Reuniones donde se habla de problemas sin evidencia.',
+    to: 'Métricas, tendencias, responsables y acciones correctivas.',
+    how: ['Medir lead time', 'Revisar vencidas', 'Identificar causa raíz de duplicadas'],
+    rfiExample: 'Revisión semanal: abiertas, vencidas, incompletas, derivadas y restricciones asociadas.',
+  },
+];
+
+export const standardLayers: StandardLayer[] = [
+  {
+    id: 'ficha',
+    title: 'Ficha del proceso',
+    purpose: 'Alinear nombre, objetivo, alcance, inicio, fin y dueño del proceso.',
+    artifact: 'Documento breve de proceso + versión vigente.',
+    rule: 'Ningún flujo se implementa sin inicio, fin, owner y criterio de cierre.',
+    owner: 'Líder BIM / Oficina técnica',
+    validation: 'El equipo puede explicar el flujo en menos de 3 minutos usando la misma definición.',
+  },
+  {
+    id: 'formulario',
+    title: 'Formulario y datos mínimos',
+    purpose: 'Evitar consultas incompletas y rebotes innecesarios.',
+    artifact: 'Formulario CDE/Build + campos obligatorios.',
+    rule: 'Si falta dato crítico, la consulta queda incompleta y no pasa a análisis.',
+    owner: 'Oficina técnica / CDE',
+    validation: 'Más del 90% de consultas entran completas al primer registro.',
+  },
+  {
+    id: 'estados',
+    title: 'Estados del flujo',
+    purpose: 'Hacer visible dónde está cada consulta y qué falta para cerrarla.',
+    artifact: 'Estados: registrada, incompleta, en análisis, respondida, derivada, cerrada.',
+    rule: 'Cada estado debe tener responsable, entrada, salida y condición de cambio.',
+    owner: 'CDE / Control documentario',
+    validation: 'No existen consultas abiertas sin estado actualizado.',
+  },
+  {
+    id: 'raci',
+    title: 'Roles y matriz RACI',
+    purpose: 'Evitar confusión entre quien registra, valida, responde, aprueba y comunica.',
+    artifact: 'Matriz RACI por etapa del flujo.',
+    rule: 'Cada actividad crítica tiene un responsable único y roles de apoyo definidos.',
+    owner: 'Gerencia de proyecto / Oficina técnica',
+    validation: 'Toda consulta tiene responsable y plazo dentro del día de registro.',
+  },
+  {
+    id: 'cde',
+    title: 'Repositorio CDE',
+    purpose: 'Centralizar evidencia, historial, soporte y comunicación oficial.',
+    artifact: 'Carpetas, permisos, nomenclatura, log y tablero.',
+    rule: 'La fuente oficial es el CDE; los canales externos solo notifican, no sustituyen registro.',
+    owner: 'CDE Manager / BIM Manager',
+    validation: '100% de consultas cerradas tienen soporte y respuesta archivada.',
+  },
+  {
+    id: 'gobierno',
+    title: 'Gobierno y mejora continua',
+    purpose: 'Mantener vivo el estándar después del taller.',
+    artifact: 'Ritual semanal, tablero KPI, lista de acciones y control de cambios.',
+    rule: 'Cada desviación repetida genera ajuste de estándar, capacitación o automatización.',
+    owner: 'PM / BIM Manager / Oficina técnica',
+    validation: 'Se revisan vencidas, duplicadas, causa raíz y acciones de mejora cada semana.',
+  },
+];
+
+export const maturityLevels: MaturityLevel[] = [
+  {
+    level: '0',
+    title: 'Invisible',
+    description: 'El proceso ocurre, pero nadie puede explicarlo igual ni auditarlo.',
+    evidence: 'Chats, correos sueltos, memoria personal y urgencias.',
+  },
+  {
+    level: '1',
+    title: 'Dibujado',
+    description: 'Existe un mapa inicial, pero todavía no gobierna el trabajo diario.',
+    evidence: 'Diagrama, roles preliminares y dolores identificados.',
+  },
+  {
+    level: '2',
+    title: 'Estandarizado',
+    description: 'El flujo tiene ficha, campos, estados, responsables y entregables definidos.',
+    evidence: 'Ficha de proceso, formulario, RACI y criterios de cierre.',
+  },
+  {
+    level: '3',
+    title: 'Digitalizado',
+    description: 'El estándar vive en el CDE, se registra y puede monitorearse.',
+    evidence: 'Log, tablero, permisos, estados y evidencia centralizada.',
+  },
+  {
+    level: '4',
+    title: 'Medido y mejorado',
+    description: 'El equipo revisa datos, corrige causas raíz y actualiza el estándar.',
+    evidence: 'KPIs, revisión semanal, acciones correctivas y trazabilidad histórica.',
+  },
 ];
 
 export const mappingSteps: MappingStep[] = [

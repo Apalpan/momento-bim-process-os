@@ -3,44 +3,54 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
-  CheckCircle2,
   ClipboardCheck,
-  Database,
   FileText,
+  Gauge,
   GitBranch,
   GraduationCap,
+  Layers,
   LayoutDashboard,
+  Lightbulb,
   ListChecks,
-  Map,
   Network,
-  Radar,
+  Search,
+  Settings2,
   ShieldCheck,
+  Target,
+  Wrench,
   Workflow,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
   caseExamples,
   executiveSignals,
-  flows,
+  improvementLevers,
   kpis,
   mappingSteps,
+  maturityLevels,
+  painDiagnostics,
   painSignals,
   processSheet,
   rfiMetrics,
   rfiNodes,
-  type Flow,
+  standardLayers,
+  type ImprovementLever,
   type MappingStep,
+  type PainDiagnostic,
   type ProcessNode,
+  type StandardLayer,
   type Tone,
 } from './data/dashboard';
 
-type SectionId = 'resumen' | 'mapeador' | 'rfi' | 'metodo' | 'metricas' | 'taller';
+type SectionId = 'resumen' | 'diagnostico' | 'mapeador' | 'rfi' | 'metodo' | 'mejora' | 'metricas' | 'taller';
 
 const navItems: { id: SectionId; label: string; icon: typeof LayoutDashboard }[] = [
   { id: 'resumen', label: 'Resumen', icon: LayoutDashboard },
+  { id: 'diagnostico', label: 'Diagnóstico del dolor', icon: Search },
   { id: 'mapeador', label: 'Mapeador interactivo', icon: Workflow },
   { id: 'rfi', label: 'Caso RFI', icon: GitBranch },
   { id: 'metodo', label: 'Método de mapeo', icon: BookOpen },
+  { id: 'mejora', label: 'Mejora y estándar', icon: Wrench },
   { id: 'metricas', label: 'Métricas y ficha', icon: BarChart3 },
   { id: 'taller', label: 'Guía de taller', icon: GraduationCap },
 ];
@@ -60,6 +70,10 @@ function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('resumen');
   const [activeStepId, setActiveStepId] = useState(mappingSteps[0].id);
   const [activeNodeId, setActiveNodeId] = useState(rfiNodes[0].id);
+  const [activePainId, setActivePainId] = useState(painDiagnostics[0].id);
+  const [activeLeverId, setActiveLeverId] = useState(improvementLevers[0].id);
+  const [activeStandardId, setActiveStandardId] = useState(standardLayers[0].id);
+  const [checkedStandards, setCheckedStandards] = useState<string[]>(['ficha', 'formulario']);
 
   const activeStep = useMemo(
     () => mappingSteps.find((step) => step.id === activeStepId) ?? mappingSteps[0],
@@ -70,6 +84,29 @@ function App() {
     () => rfiNodes.find((node) => node.id === activeNodeId) ?? rfiNodes[0],
     [activeNodeId],
   );
+
+  const activePain = useMemo(
+    () => painDiagnostics.find((pain) => pain.id === activePainId) ?? painDiagnostics[0],
+    [activePainId],
+  );
+
+  const activeLever = useMemo(
+    () => improvementLevers.find((lever) => lever.id === activeLeverId) ?? improvementLevers[0],
+    [activeLeverId],
+  );
+
+  const activeStandard = useMemo(
+    () => standardLayers.find((layer) => layer.id === activeStandardId) ?? standardLayers[0],
+    [activeStandardId],
+  );
+
+  const standardProgress = Math.round((checkedStandards.length / standardLayers.length) * 100);
+
+  const toggleStandard = (id: string) => {
+    setCheckedStandards((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    );
+  };
 
   return (
     <div className="app-shell">
@@ -107,6 +144,9 @@ function App() {
       <main className="main-area">
         <TopBar />
         {activeSection === 'resumen' && <ExecutiveOverview setActiveSection={setActiveSection} />}
+        {activeSection === 'diagnostico' && (
+          <PainDiagnosisSection activePain={activePain} activePainId={activePainId} setActivePainId={setActivePainId} />
+        )}
         {activeSection === 'mapeador' && (
           <InteractiveMapper
             activeStep={activeStep}
@@ -115,6 +155,9 @@ function App() {
             activeNode={activeNode}
             activeNodeId={activeNodeId}
             setActiveNodeId={setActiveNodeId}
+            activePain={activePain}
+            activePainId={activePainId}
+            setActivePainId={setActivePainId}
           />
         )}
         {activeSection === 'rfi' && (
@@ -125,6 +168,19 @@ function App() {
           />
         )}
         {activeSection === 'metodo' && <MethodSection activeStepId={activeStepId} setActiveStepId={setActiveStepId} />}
+        {activeSection === 'mejora' && (
+          <ImprovementSection
+            activeLever={activeLever}
+            activeLeverId={activeLeverId}
+            setActiveLeverId={setActiveLeverId}
+            activeStandard={activeStandard}
+            activeStandardId={activeStandardId}
+            setActiveStandardId={setActiveStandardId}
+            checkedStandards={checkedStandards}
+            toggleStandard={toggleStandard}
+            standardProgress={standardProgress}
+          />
+        )}
         {activeSection === 'metricas' && <MetricsSection />}
         {activeSection === 'taller' && <WorkshopSection />}
       </main>
@@ -159,7 +215,11 @@ function ExecutiveOverview({ setActiveSection }: { setActiveSection: (section: S
             técnicas/RFI como caso principal para convertir dudas, documentos, responsables y evidencias en flujo controlado.
           </p>
           <div className="action-row">
-            <button className="primary-action" onClick={() => setActiveSection('mapeador')} type="button">
+            <button className="primary-action" onClick={() => setActiveSection('diagnostico')} type="button">
+              <Search size={18} />
+              Diagnosticar dolor
+            </button>
+            <button className="secondary-action" onClick={() => setActiveSection('mapeador')} type="button">
               <Workflow size={18} />
               Abrir mapeador
             </button>
@@ -170,6 +230,10 @@ function ExecutiveOverview({ setActiveSection }: { setActiveSection: (section: S
             <button className="secondary-action" onClick={() => setActiveSection('metricas')} type="button">
               <BarChart3 size={18} />
               Ver métricas
+            </button>
+            <button className="secondary-action" onClick={() => setActiveSection('mejora')} type="button">
+              <Wrench size={18} />
+              Mejorar y estandarizar
             </button>
           </div>
         </div>
@@ -232,6 +296,92 @@ function ExecutiveOverview({ setActiveSection }: { setActiveSection: (section: S
   );
 }
 
+function PainDiagnosisSection({
+  activePain,
+  activePainId,
+  setActivePainId,
+}: {
+  activePain: PainDiagnostic;
+  activePainId: string;
+  setActivePainId: (id: string) => void;
+}) {
+  return (
+    <section className="section-stack">
+      <SectionHero
+        icon={Search}
+        eyebrow="Antes de mapear"
+        title="El mapa empieza cuando el equipo entiende el dolor"
+        text="Un proceso no se mapea para documentar lo obvio. Se mapea para ver dónde se pierde tiempo, quién queda bloqueado, qué evidencia falta y qué decisión se está tomando fuera del sistema."
+      />
+
+      <div className="pain-lab">
+        <div className="panel pain-selector">
+          <PanelHeader icon={AlertTriangle} label="Dolores típicos" title="Selecciona el síntoma que aparece en obra" />
+          {painDiagnostics.map((pain) => (
+            <button
+              className={pain.id === activePainId ? 'pain-button pain-button--active' : 'pain-button'}
+              key={pain.id}
+              onClick={() => setActivePainId(pain.id)}
+              type="button"
+            >
+              <strong>{pain.pain}</strong>
+              <span>{pain.symptom}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="panel pain-detail">
+          <PanelHeader icon={Target} label="Lectura del dolor" title={activePain.pain} />
+          <div className="pain-chain">
+            <article>
+              <span>Qué pasa</span>
+              <p>{activePain.whatHappens}</p>
+            </article>
+            <article>
+              <span>Por qué importa</span>
+              <p>{activePain.whyItMatters}</p>
+            </article>
+            <article>
+              <span>Señal en el mapa</span>
+              <p>{activePain.mapSignal}</p>
+            </article>
+          </div>
+          <div className="diagnosis-path" aria-label="Ruta de diagnóstico del dolor">
+            {['Síntoma', 'Causa visible', 'Impacto', 'Regla', 'Control'].map((step, index) => (
+              <article key={step}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{step}</strong>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel">
+          <PanelHeader icon={Lightbulb} label="De dolor a mejora" title="Qué debe producir el mapa" />
+          <div className="improvement-brief">
+            <article>
+              <span>Mejora</span>
+              <p>{activePain.improvement}</p>
+            </article>
+            <article>
+              <span>Estándar</span>
+              <p>{activePain.standard}</p>
+            </article>
+            <article>
+              <span>Métrica</span>
+              <p>{activePain.metric}</p>
+            </article>
+            <article>
+              <span>Ejemplo RFI</span>
+              <p>{activePain.rfiExample}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function InteractiveMapper({
   activeStep,
   activeStepId,
@@ -239,6 +389,9 @@ function InteractiveMapper({
   activeNode,
   activeNodeId,
   setActiveNodeId,
+  activePain,
+  activePainId,
+  setActivePainId,
 }: {
   activeStep: MappingStep;
   activeStepId: string;
@@ -246,6 +399,9 @@ function InteractiveMapper({
   activeNode: ProcessNode;
   activeNodeId: string;
   setActiveNodeId: (id: string) => void;
+  activePain: PainDiagnostic;
+  activePainId: string;
+  setActivePainId: (id: string) => void;
 }) {
   return (
     <section className="section-stack">
@@ -255,6 +411,43 @@ function InteractiveMapper({
         title="Haz clic en un paso del método y en un nodo del proceso"
         text="La dinámica muestra cómo se enseña a mapear: primero se entiende el método, luego se lee el flujo RFI y finalmente se conecta cada nodo con evidencia, riesgo y decisión."
       />
+
+      <div className="learning-loop">
+        {[
+          ['01', 'Dolor', 'Qué falla, a quién bloquea y qué evidencia se pierde.'],
+          ['02', 'Mapa actual', 'Cómo ocurre realmente: roles, inputs, decisiones y retrabajos.'],
+          ['03', 'Mapa objetivo', 'Qué se elimina, simplifica, estandariza o digitaliza.'],
+          ['04', 'Control', 'Qué métrica prueba que el proceso mejoró y se sostiene.'],
+        ].map(([id, title, text]) => (
+          <article key={id}>
+            <span>{id}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={Search} label="Dolor activo" title="Selecciona qué problema quieres perseguir dentro del mapa" />
+        <div className="pain-chip-grid">
+          {painDiagnostics.map((pain) => (
+            <button
+              className={pain.id === activePainId ? 'pain-chip pain-chip--active' : 'pain-chip'}
+              key={pain.id}
+              onClick={() => setActivePainId(pain.id)}
+              type="button"
+            >
+              {pain.pain}
+            </button>
+          ))}
+        </div>
+        <div className="active-pain-summary">
+          <AlertTriangle size={18} />
+          <p>
+            <strong>{activePain.pain}:</strong> {activePain.mapSignal}
+          </p>
+        </div>
+      </div>
 
       <div className="mapper-layout">
         <div className="panel">
@@ -411,6 +604,154 @@ function MethodSection({
             <small>{step.output}</small>
           </button>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function ImprovementSection({
+  activeLever,
+  activeLeverId,
+  setActiveLeverId,
+  activeStandard,
+  activeStandardId,
+  setActiveStandardId,
+  checkedStandards,
+  toggleStandard,
+  standardProgress,
+}: {
+  activeLever: ImprovementLever;
+  activeLeverId: string;
+  setActiveLeverId: (id: string) => void;
+  activeStandard: StandardLayer;
+  activeStandardId: string;
+  setActiveStandardId: (id: string) => void;
+  checkedStandards: string[];
+  toggleStandard: (id: string) => void;
+  standardProgress: number;
+}) {
+  return (
+    <section className="section-stack">
+      <SectionHero
+        icon={Wrench}
+        eyebrow="Mejora y estandarización"
+        title="Mapear no basta: el mapa debe convertirse en una regla de trabajo"
+        text="Después de identificar el dolor y dibujar el flujo real, el equipo debe decidir qué elimina, simplifica, estandariza, digitaliza, automatiza y controla. Ese rediseño se vuelve estándar cuando tiene ficha, roles, datos, estados, CDE y métrica."
+      />
+
+      <div className="improvement-layout">
+        <div className="panel">
+          <PanelHeader icon={Lightbulb} label="Palancas de mejora" title="Elige cómo intervenir el proceso" />
+          <div className="lever-grid">
+            {improvementLevers.map((lever) => (
+              <button
+                className={lever.id === activeLeverId ? 'lever-card lever-card--active' : 'lever-card'}
+                key={lever.id}
+                onClick={() => setActiveLeverId(lever.id)}
+                type="button"
+              >
+                <span>{lever.title}</span>
+                <p>{lever.intent}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel">
+          <PanelHeader icon={Wrench} label="Rediseño activo" title={activeLever.title} />
+          <div className="before-after">
+            <article>
+              <span>De</span>
+              <p>{activeLever.from}</p>
+            </article>
+            <ArrowRight size={22} />
+            <article>
+              <span>A</span>
+              <p>{activeLever.to}</p>
+            </article>
+          </div>
+          <DetailList title="Cómo aplicarlo" items={activeLever.how} />
+          <article className="rfi-example-card">
+            <span>Aplicación en RFI</span>
+            <p>{activeLever.rfiExample}</p>
+          </article>
+        </div>
+      </div>
+
+      <div className="standard-layout">
+        <div className="panel standard-list">
+          <PanelHeader icon={Layers} label="Capas de estándar" title="Qué debe quedar implementado" />
+          {standardLayers.map((layer) => (
+            <button
+              className={layer.id === activeStandardId ? 'standard-button standard-button--active' : 'standard-button'}
+              key={layer.id}
+              onClick={() => setActiveStandardId(layer.id)}
+              type="button"
+            >
+              <strong>{layer.title}</strong>
+              <span>{layer.purpose}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="panel standard-detail">
+          <PanelHeader icon={Settings2} label="Estándar activo" title={activeStandard.title} />
+          <div className="standard-facts">
+            <article>
+              <span>Artefacto</span>
+              <p>{activeStandard.artifact}</p>
+            </article>
+            <article>
+              <span>Regla</span>
+              <p>{activeStandard.rule}</p>
+            </article>
+            <article>
+              <span>Owner</span>
+              <p>{activeStandard.owner}</p>
+            </article>
+            <article>
+              <span>Validación</span>
+              <p>{activeStandard.validation}</p>
+            </article>
+          </div>
+        </div>
+
+        <div className="panel standard-checklist">
+          <PanelHeader icon={Gauge} label="Checklist interactivo" title="Madurez del estándar" />
+          <div className="readiness-meter">
+            <strong>{standardProgress}%</strong>
+            <div>
+              <span style={{ width: `${standardProgress}%` }} />
+            </div>
+            <p>{standardProgress < 70 ? 'Todavía es un mapa de taller.' : 'Ya empieza a comportarse como estándar operativo.'}</p>
+          </div>
+          <div className="standard-checkboxes">
+            {standardLayers.map((layer) => (
+              <label key={layer.id}>
+                <input
+                  checked={checkedStandards.includes(layer.id)}
+                  onChange={() => toggleStandard(layer.id)}
+                  type="checkbox"
+                />
+                <span>{layer.title}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={Gauge} label="Ruta de madurez" title="Cómo evoluciona un proceso BIM mapeado" />
+        <div className="maturity-grid">
+          {maturityLevels.map((level) => (
+            <article key={level.level}>
+              <span>{level.level}</span>
+              <h3>{level.title}</h3>
+              <p>{level.description}</p>
+              <small>{level.evidence}</small>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
