@@ -36,6 +36,8 @@ import {
   rfiAreaLanes,
   rfiMetrics,
   rfiNodes,
+  rfiReferenceSignals,
+  rfiTargetPhases,
   standardLayers,
   workshopConsiderations,
   type ImprovementLever,
@@ -554,6 +556,8 @@ function RfiCaseSection({
         </div>
       </div>
 
+      <RfiTargetProposal />
+
       <AreaFlowComparison />
 
       <RfiProcessBoard activeNodeId={activeNodeId} setActiveNodeId={setActiveNodeId} />
@@ -580,10 +584,72 @@ function RfiCaseSection({
   );
 }
 
+function RfiTargetProposal() {
+  return (
+    <div className="panel target-proposal-panel">
+      <PanelHeader
+        icon={Target}
+        label="Propuesta objetivo GEN+"
+        title="Del mapa genérico al proceso RFI que debería implementarse"
+      />
+      <p className="proposal-intro">
+        La referencia sirve para detectar ideas útiles, pero la propuesta no debe repetir actividades por cada área.
+        El flujo correcto ordena la responsabilidad: Campo inicia con datos completos, Oficina Técnica gobierna el log,
+        BIM produce soporte, Diseño responde, Proyectos decide impacto y Calidad cierra con evidencia.
+      </p>
+
+      <div className="reference-signal-grid">
+        {rfiReferenceSignals.map((item) => (
+          <article className="reference-signal-card" key={item.id}>
+            <span>Señal de referencia</span>
+            <h3>{item.signal}</h3>
+            <div>
+              <ArrowRight size={16} />
+              <p>{item.proposalFocus}</p>
+            </div>
+            <small>{item.avoid}</small>
+          </article>
+        ))}
+      </div>
+
+      <div className="target-phase-grid">
+        {rfiTargetPhases.map((phase) => (
+          <article className="target-phase-card" key={phase.id}>
+            <div className="target-phase-head">
+              <span>{phase.number}</span>
+              <div>
+                <h3>{phase.title}</h3>
+                <strong>{phase.owner}</strong>
+              </div>
+            </div>
+            <p>{phase.focus}</p>
+            <div className="target-phase-decision">
+              <span>Decisión clave</span>
+              <strong>{phase.decision}</strong>
+            </div>
+            <div className="target-phase-evidence">
+              <span>Evidencia de control</span>
+              <p>{phase.evidence}</p>
+            </div>
+            <div className="target-phase-actions">
+              {phase.actions.map((action) => (
+                <div key={`${phase.id}-${action.lane}`}>
+                  <span>{action.lane}</span>
+                  <p>{action.action}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function AreaFlowComparison() {
   return (
     <div className="panel">
-      <PanelHeader icon={Workflow} label="Proceso ejemplo vs. propuesto" title="Gestión RFI por áreas involucradas" />
+      <PanelHeader icon={Workflow} label="Comparación por áreas" title="Proceso actual vs. proceso propuesto como debe ser" />
       <div className="area-comparison-grid">
         {rfiAreaFlows.map((flow) => (
           <article className={`area-flow-card area-flow-card--${flow.id}`} key={flow.id}>

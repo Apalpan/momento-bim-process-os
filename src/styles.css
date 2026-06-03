@@ -1493,6 +1493,169 @@ button {
   line-height: 1.4;
 }
 
+.target-proposal-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 246, 255, 0.94)),
+    #fff;
+}
+
+.proposal-intro {
+  max-width: 980px;
+  margin: 0 0 18px;
+  color: var(--gen-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.reference-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reference-signal-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #dfe8f6;
+  border-radius: 14px;
+  padding: 15px;
+  background: #fbfdff;
+}
+
+.reference-signal-card > span,
+.target-phase-decision span,
+.target-phase-evidence span,
+.target-phase-actions span {
+  color: var(--gen-primary);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reference-signal-card h3 {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.reference-signal-card div {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  border-radius: 12px;
+  padding: 10px;
+  background: #eef5ff;
+}
+
+.reference-signal-card svg {
+  color: var(--gen-primary);
+  margin-top: 2px;
+}
+
+.reference-signal-card p,
+.reference-signal-card small {
+  margin: 0;
+  color: var(--gen-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.reference-signal-card small {
+  color: var(--gen-deep-blue);
+  font-weight: 750;
+}
+
+.target-phase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.target-phase-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(33, 101, 255, 0.16);
+  border-radius: 16px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(10, 36, 76, 0.06);
+}
+
+.target-phase-head {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.target-phase-head > span {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--gen-deep-blue);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.target-phase-head h3 {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.target-phase-head strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--gen-primary);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.target-phase-card > p,
+.target-phase-evidence p,
+.target-phase-actions p {
+  margin: 0;
+  color: var(--gen-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.target-phase-decision,
+.target-phase-evidence {
+  display: grid;
+  gap: 6px;
+  border-radius: 12px;
+  padding: 11px;
+  background: #f4f8ff;
+}
+
+.target-phase-decision strong {
+  color: var(--gen-deep-blue);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.target-phase-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.target-phase-actions div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 8px;
+  border-top: 1px solid #e7eef8;
+  padding-top: 8px;
+}
+
 .flow-build-panel {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(239, 246, 255, 0.92)),
@@ -2226,6 +2389,8 @@ button {
   .nav-list {
     display: flex;
     gap: 10px;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
     padding-bottom: 4px;
     scrollbar-width: none;
@@ -2237,6 +2402,7 @@ button {
 
   .nav-item {
     flex: 0 0 auto;
+    width: auto;
     min-height: 42px;
     white-space: nowrap;
   }
@@ -2267,7 +2433,8 @@ button {
   .method-active-grid,
   .consideration-grid,
   .case-improvement-board,
-  .brainstorm-grid {
+  .brainstorm-grid,
+  .reference-signal-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2322,7 +2489,9 @@ button {
     .consideration-grid,
     .case-improvement-board,
     .flow-build-grid,
-    .brainstorm-grid {
+    .brainstorm-grid,
+    .reference-signal-grid,
+    .target-phase-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2361,6 +2530,12 @@ button {
   }
 
   .process-lane > div {
+    grid-template-columns: 1fr;
+  }
+
+  .rfi-lane,
+  .rfi-lane > div,
+  .summary-strip {
     grid-template-columns: 1fr;
   }
 

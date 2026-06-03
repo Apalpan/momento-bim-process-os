@@ -104,6 +104,27 @@ export type AreaProcessFlow = {
   }[];
 };
 
+export type RfiReferenceSignal = {
+  id: string;
+  signal: string;
+  proposalFocus: string;
+  avoid: string;
+};
+
+export type RfiTargetPhase = {
+  id: string;
+  number: string;
+  title: string;
+  owner: string;
+  focus: string;
+  decision: string;
+  evidence: string;
+  actions: {
+    lane: string;
+    action: string;
+  }[];
+};
+
 export type Flow = {
   id: string;
   title: string;
@@ -673,27 +694,34 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
   },
   {
     id: 'mejorado',
-    label: 'Proceso propuesto mejorado',
-    title: 'Gestión RFI / consulta técnica estandarizada',
-    intent: 'Convertir la duda técnica en flujo controlado con formulario, responsable, SLA, evidencia, decisión de impacto y cierre verificable.',
-    riskOrControl: 'Control dominante: toda consulta tiene código, responsable, estado, evidencia, comunicación oficial y criterio de cierre.',
+    label: 'Proceso propuesto como debe ser',
+    title: 'Gestión RFI / consulta técnica gobernada por CDE',
+    intent: 'Tomar las ideas útiles del mapeo genérico y ordenarlas como proceso implementable: gate de información, triage, soporte BIM, respuesta técnica, impacto y cierre.',
+    riskOrControl: 'Control dominante: la consulta no se repite en cada área; avanza por estados, responsables, evidencia, SLA y criterio de cierre.',
     lanes: [
       {
         lane: 'Campo / Producción',
         steps: [
           {
             id: 'mejorado-campo-1',
-            title: 'Detecta y registra la duda',
-            detail: 'Campo inicia la consulta desde un formato único con frente, ubicación, especialidad, actividad afectada e impacto esperado.',
-            tool: 'Formulario CDE/Build desde obra.',
-            evidence: 'Código de consulta, foto, ubicación, plano/modelo referenciado y descripción del impacto.',
+            title: 'Detecta la duda y verifica datos mínimos',
+            detail: 'Campo confirma que la consulta tiene ubicación, frente, actividad, especialidad, documento de referencia, foto y descripción del impacto antes de enviarla.',
+            tool: 'Checklist móvil de consulta técnica.',
+            evidence: 'Datos mínimos completos: frente, ubicación, especialidad, plano/modelo, foto y actividad afectada.',
           },
           {
             id: 'mejorado-campo-2',
-            title: 'Adjunta evidencia mínima',
-            detail: 'La consulta no avanza si falta información crítica para que Oficina Técnica pueda validarla.',
-            tool: 'Formulario con campos obligatorios.',
-            evidence: 'Checklist de completitud inicial.',
+            title: 'Registra consulta en CDE/Build',
+            detail: 'La duda se convierte en solicitud trazable con código, fecha, responsable solicitante, prioridad tentativa y soporte adjunto.',
+            tool: 'Formulario CDE/Build desde obra.',
+            evidence: 'Código de consulta, adjuntos, descripción del problema e impacto esperado en producción.',
+          },
+          {
+            id: 'mejorado-campo-3',
+            title: 'Soporta la respuesta en obra',
+            detail: 'Cuando recibe la respuesta oficial, Campo valida que sea aplicable al frente y reporta si requiere aclaración adicional.',
+            tool: 'CDE/Build + evidencia de aplicación.',
+            evidence: 'Confirmación de recepción, foto o comentario de aplicación en campo.',
           },
         ],
       },
@@ -702,17 +730,24 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
         steps: [
           {
             id: 'mejorado-ot-1',
-            title: 'Valida completitud y clasifica',
-            detail: 'Revisa si la consulta es simple, RFI formal, cambio potencial o restricción de obra.',
+            title: 'Valida completitud y necesidad de RFI',
+            detail: 'Revisa si la información está completa, si la duda se resuelve con documentos vigentes o si debe formularse como RFI/SDI.',
             tool: 'Log maestro de consultas / CDE.',
-            evidence: 'Estado, clasificación, prioridad, responsable y fecha objetivo.',
+            evidence: 'Estado de completitud, decisión de clasificación, prioridad y motivo de escalamiento.',
           },
           {
             id: 'mejorado-ot-2',
-            title: 'Asigna responsable y SLA',
-            detail: 'Deriva al área correcta con plazo, criterio de respuesta y ruta de escalamiento.',
-            tool: 'Tablero de estados y alertas.',
-            evidence: 'Owner asignado, SLA, fecha de revisión y trazabilidad de derivación.',
+            title: 'Revisa documentos técnicos y especificaciones',
+            detail: 'Contrasta planos, especificaciones, EETT, historial y consultas previas para evitar duplicados o respuestas ya disponibles.',
+            tool: 'Autodesk Docs / CDE + log RFI.',
+            evidence: 'Documento revisado, versión vigente, consulta relacionada y resultado de revisión documental.',
+          },
+          {
+            id: 'mejorado-ot-3',
+            title: 'Asigna responsable, prioridad y SLA',
+            detail: 'Deriva a BIM, Diseño o Proyectos con responsable claro, plazo de respuesta y ruta de escalamiento si vence.',
+            tool: 'Tablero de estados, log RFI y alertas.',
+            evidence: 'Owner asignado, prioridad, SLA, fecha objetivo y estado actualizado en el log.',
           },
         ],
       },
@@ -721,17 +756,24 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
         steps: [
           {
             id: 'mejorado-bim-1',
-            title: 'Verifica modelo, versión e interferencia',
-            detail: 'Confirma si la duda se resuelve con información vigente o si hay conflicto entre modelo, plano y obra.',
+            title: 'Revisa modelo BIM según consulta de campo',
+            detail: 'Verifica modelo, plano vinculado, coordenada/frente, versión y posibles interferencias asociadas a la consulta.',
             tool: 'Modelo BIM, Autodesk Docs, visor/model coordination.',
             evidence: 'Captura BIM, versión consultada, coordenada/frente y hallazgo técnico.',
           },
           {
             id: 'mejorado-bim-2',
-            title: 'Adjunta soporte BIM al expediente',
-            detail: 'El análisis BIM queda vinculado al código de consulta y no como captura aislada.',
-            tool: 'CDE / registro de consulta.',
-            evidence: 'Soporte BIM anexado al log y disponible para Diseño/Proyectos/Calidad.',
+            title: 'Genera incidencia, redline o soporte BIM',
+            detail: 'Cuando corresponde, crea incidencia en modelo, redline en plano o soporte visual para que Diseño responda con contexto suficiente.',
+            tool: 'Issue BIM / redline / captura vinculada al CDE.',
+            evidence: 'Issue, redline, vista 3D, comentario técnico y enlace al modelo/documento.',
+          },
+          {
+            id: 'mejorado-bim-3',
+            title: 'Actualiza modelo si la respuesta lo exige',
+            detail: 'Si la respuesta aprobada modifica el modelo o condición as-built, BIM registra la acción pendiente o ejecutada con control de versión.',
+            tool: 'Modelo coordinado + control de revisiones.',
+            evidence: 'Registro de actualización, versión del modelo y vínculo a la respuesta oficial.',
           },
         ],
       },
@@ -740,17 +782,24 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
         steps: [
           {
             id: 'mejorado-diseno-1',
-            title: 'Emite respuesta técnica sustentada',
-            detail: 'Diseño responde con criterio técnico, documento soporte, restricción y alcance de la solución.',
+            title: 'Valida la consulta técnica',
+            detail: 'Diseño revisa la necesidad formulada, el soporte BIM/documental y el contexto de campo antes de emitir criterio.',
             tool: 'Plantilla de respuesta técnica.',
-            evidence: 'Respuesta oficial vinculada a plano/modelo/especificación.',
+            evidence: 'Criterio técnico, documento base, alcance de respuesta y restricciones de aplicación.',
           },
           {
             id: 'mejorado-diseno-2',
-            title: 'Define si requiere cambio de diseño',
-            detail: 'Si modifica diseño, especificación o solución aprobada, se marca para evaluación de Proyectos.',
-            tool: 'Criterio de impacto técnico.',
-            evidence: 'Decisión explícita: consulta simple, RFI/SDI o cambio formal.',
+            title: 'Emite respuesta oficial sustentada',
+            detail: 'La respuesta queda asociada al código de consulta, con plano, especificación, croquis, redline o criterio técnico aplicable.',
+            tool: 'Respuesta técnica en CDE / transmittal.',
+            evidence: 'Respuesta oficial, soporte técnico, referencia documental y condición de aplicación.',
+          },
+          {
+            id: 'mejorado-diseno-3',
+            title: 'Define cambio de diseño o especificación',
+            detail: 'Si la solución cambia diseño, especificación o procedimiento, se marca para evaluación formal de Proyectos.',
+            tool: 'Criterio de cambio técnico.',
+            evidence: 'Decisión explícita: consulta simple, RFI/SDI, cambio de diseño o cambio contractual.',
           },
         ],
       },
@@ -759,15 +808,22 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
         steps: [
           {
             id: 'mejorado-proyectos-1',
-            title: 'Evalúa impacto costo/plazo/alcance',
-            detail: 'Determina si la respuesta afecta cronograma, presupuesto, contrato, alcance, seguridad o producción.',
+            title: 'Verifica impacto técnico y contractual',
+            detail: 'Evalúa si la respuesta afecta alcance, costo, plazo, seguridad, calidad, productividad o condiciones contractuales.',
             tool: 'Matriz de impacto y tablero de restricciones.',
             evidence: 'Impacto registrado, decisión de escalamiento y aprobación si aplica.',
           },
           {
             id: 'mejorado-proyectos-2',
+            title: 'Determina procedimiento constructivo o cambio formal',
+            detail: 'Si la solución requiere ajustar método, secuencia o procedimiento constructivo, define ruta de aprobación y control.',
+            tool: 'Matriz de cambio / procedimiento constructivo.',
+            evidence: 'Decisión de procedimiento, responsable de aprobación y condición para ejecutar.',
+          },
+          {
+            id: 'mejorado-proyectos-3',
             title: 'Autoriza derivación formal',
-            detail: 'Cuando corresponde, deriva a RFI/SDI/cambio formal con control contractual y responsable.',
+            detail: 'Cuando corresponde, deriva a RFI/SDI/cambio formal con control contractual, responsable y fecha compromiso.',
             tool: 'Flujo formal de cambios / RFI.',
             evidence: 'ID RFI/SDI, aprobador, responsable y fecha de compromiso.',
           },
@@ -778,20 +834,160 @@ export const rfiAreaFlows: AreaProcessFlow[] = [
         steps: [
           {
             id: 'mejorado-calidad-1',
-            title: 'Verifica evidencia y comunicación',
-            detail: 'Confirma que la respuesta fue comunicada al frente correcto y que la evidencia cumple el estándar.',
-            tool: 'Checklist de cierre y repositorio CDE.',
-            evidence: 'Comunicación oficial, lista de distribución, soporte y evidencia de aplicación.',
+            title: 'Compatibiliza evidencia, planos y formatos',
+            detail: 'Revisa que la respuesta tenga soporte suficiente, documentos compatibles, formato correcto y evidencia lista para auditoría.',
+            tool: 'Checklist de calidad + repositorio CDE.',
+            evidence: 'Formato validado, documentos soporte, trazabilidad y observaciones cerradas.',
           },
           {
             id: 'mejorado-calidad-2',
+            title: 'Controla comunicación oficial y cierre',
+            detail: 'Confirma que la solución fue comunicada al frente correcto, que el log está actualizado y que el estado final es auditable.',
+            tool: 'Log RFI / tablero KPI semanal.',
+            evidence: 'Comunicación oficial, lista de distribución, estado cerrado y responsable de cierre.',
+          },
+          {
+            id: 'mejorado-calidad-3',
+            title: 'Define herramientas y formatos de control',
+            detail: 'Convierte el aprendizaje del caso en mejora del formulario, checklist, log, codificación, métrica o estándar de evidencia.',
+            tool: 'Lecciones aprendidas + estándar de proceso.',
+            evidence: 'Mejora aprobada, campo obligatorio, métrica ajustada o regla incorporada al estándar.',
+          },
+          {
+            id: 'mejorado-calidad-4',
             title: 'Cierra y mide el proceso',
-            detail: 'Cierra solo si hay respuesta, soporte, comunicación, estado final y responsable de cierre.',
+            detail: 'Cierra solo si hay respuesta, soporte, comunicación, estado final, tiempo de respuesta y responsable de cierre.',
             tool: 'Tablero KPI semanal.',
             evidence: 'Estado cerrado, fecha, responsable, tiempo de respuesta y causa raíz si hubo demora.',
           },
         ],
       },
+    ],
+  },
+];
+
+export const rfiReferenceSignals: RfiReferenceSignal[] = [
+  {
+    id: 'completitud',
+    signal: 'Verificar si la información está completa',
+    proposalFocus: 'Convertirlo en gate de entrada con campos obligatorios antes de escalar a Oficina Técnica, BIM o Diseño.',
+    avoid: 'Evitar que cada área vuelva a pedir lo mismo y el flujo se llene de retornos.',
+  },
+  {
+    id: 'necesidad-rfi',
+    signal: 'Identificar necesidad de formular RFI',
+    proposalFocus: 'Hacer que Oficina Técnica clasifique: consulta simple, RFI/SDI, cambio de diseño o cambio con impacto.',
+    avoid: 'Evitar que cualquier duda sea RFI o que un cambio real se trate como consulta informal.',
+  },
+  {
+    id: 'documentos',
+    signal: 'Revisar especificaciones, planos y documentos técnicos',
+    proposalFocus: 'Usar CDE como fuente única de verdad y registrar versión consultada, documento soporte y resultado de revisión.',
+    avoid: 'Evitar respuestas basadas en PDFs locales, planos obsoletos o memoria de reuniones.',
+  },
+  {
+    id: 'bim-redlines',
+    signal: 'Soporte BIM, incidencias, redlines y modelo as-built',
+    proposalFocus: 'Vincular issue, redline, captura o actualización BIM al código de consulta y a la respuesta oficial.',
+    avoid: 'Evitar capturas sueltas sin relación con log, versión, responsable o cierre.',
+  },
+  {
+    id: 'impacto',
+    signal: 'Evaluación de impacto y procedimiento constructivo',
+    proposalFocus: 'Ubicar la decisión en Proyectos: costo, plazo, alcance, seguridad, calidad, productividad y ruta formal si aplica.',
+    avoid: 'Evitar que Diseño resuelva técnicamente sin que el impacto operativo/contractual quede evaluado.',
+  },
+  {
+    id: 'control',
+    signal: 'Actualización del log, formatos y herramientas de control',
+    proposalFocus: 'Cerrar con Calidad y Oficina Técnica: log actualizado, comunicación oficial, evidencia, métrica y mejora del estándar.',
+    avoid: 'Evitar cierres verbales que no dejan aprendizaje ni trazabilidad para el siguiente caso.',
+  },
+];
+
+export const rfiTargetPhases: RfiTargetPhase[] = [
+  {
+    id: 'entrada',
+    number: '01',
+    title: 'Entrada controlada',
+    owner: 'Campo / Producción',
+    focus: 'La duda nace en obra, pero no debe llegar como mensaje suelto. Debe entrar con datos mínimos y soporte verificable.',
+    decision: '¿La consulta tiene información suficiente para no rebotar?',
+    evidence: 'Código, fecha, frente, ubicación, actividad afectada, plano/modelo, foto, especialidad e impacto esperado.',
+    actions: [
+      { lane: 'Campo', action: 'Detecta la duda y completa el formulario.' },
+      { lane: 'Calidad', action: 'Define checklist mínimo de evidencia.' },
+      { lane: 'Oficina Técnica', action: 'Recibe solo consultas con datos mínimos.' },
+    ],
+  },
+  {
+    id: 'triage',
+    number: '02',
+    title: 'Triage técnico y prioridad',
+    owner: 'Oficina Técnica',
+    focus: 'La consulta se revisa contra información vigente antes de formular RFI. Aquí se decide si se resuelve, se observa o se escala.',
+    decision: '¿Se resuelve con información disponible o requiere RFI/SDI?',
+    evidence: 'Log actualizado, prioridad, responsable, SLA, documento revisado, versión vigente y motivo de clasificación.',
+    actions: [
+      { lane: 'Oficina Técnica', action: 'Valida completitud, revisa documentos y asigna responsable.' },
+      { lane: 'BIM', action: 'Confirma versión del modelo/plano si la duda tiene componente espacial.' },
+      { lane: 'Proyectos', action: 'Recibe alerta temprana si hay riesgo de restricción o impacto.' },
+    ],
+  },
+  {
+    id: 'bim',
+    number: '03',
+    title: 'Soporte BIM y documental',
+    owner: 'Área BIM',
+    focus: 'BIM no solo “revisa el modelo”; debe producir soporte trazable para decidir y responder con evidencia.',
+    decision: '¿El modelo/plano confirma, contradice o requiere ajuste?',
+    evidence: 'Issue BIM, redline, vista 3D, coordenada, versión consultada, interferencia y enlace al CDE.',
+    actions: [
+      { lane: 'BIM', action: 'Revisa modelo, interferencias, redlines y condición as-built.' },
+      { lane: 'Diseño', action: 'Recibe soporte técnico listo para emitir criterio.' },
+      { lane: 'Oficina Técnica', action: 'Actualiza log con hallazgo y siguiente responsable.' },
+    ],
+  },
+  {
+    id: 'respuesta',
+    number: '04',
+    title: 'Respuesta técnica oficial',
+    owner: 'Área de Diseño',
+    focus: 'La respuesta debe ser aplicable, sustentada y vinculada al expediente; no basta una indicación por correo.',
+    decision: '¿La solución cambia diseño, especificación o criterio aprobado?',
+    evidence: 'Respuesta oficial, documento soporte, croquis/redline, especificación, restricción y condición de aplicación.',
+    actions: [
+      { lane: 'Diseño', action: 'Emite criterio técnico y define si hay cambio.' },
+      { lane: 'BIM', action: 'Prepara actualización de modelo si corresponde.' },
+      { lane: 'Campo', action: 'Confirma si la respuesta resuelve la condición de obra.' },
+    ],
+  },
+  {
+    id: 'impacto',
+    number: '05',
+    title: 'Impacto y formalización',
+    owner: 'Área de Proyectos',
+    focus: 'Toda solución con impacto debe salir del circuito informal y entrar a una ruta de aprobación controlada.',
+    decision: '¿Afecta costo, plazo, alcance, seguridad, calidad o productividad?',
+    evidence: 'Matriz de impacto, ruta RFI/SDI/cambio, aprobador, responsable, fecha compromiso y restricción asociada.',
+    actions: [
+      { lane: 'Proyectos', action: 'Evalúa impacto y autoriza ruta formal.' },
+      { lane: 'Oficina Técnica', action: 'Actualiza estado y mantiene trazabilidad contractual.' },
+      { lane: 'Calidad', action: 'Verifica que la decisión tenga soporte auditable.' },
+    ],
+  },
+  {
+    id: 'cierre',
+    number: '06',
+    title: 'Cierre verificable y mejora',
+    owner: 'Calidad + Oficina Técnica',
+    focus: 'El cierre ocurre cuando la respuesta está comunicada, registrada, aplicada y convertida en aprendizaje para el estándar.',
+    decision: '¿Quedó comunicada, aplicada y actualizada en CDE/log/modelo?',
+    evidence: 'Estado cerrado, comunicación oficial, lista de distribución, soporte CDE, actualización BIM/log y métrica de tiempo.',
+    actions: [
+      { lane: 'Calidad', action: 'Valida evidencia, formato, comunicación y cierre.' },
+      { lane: 'Oficina Técnica', action: 'Controla KPI, vencidos, causa raíz y mejora del log.' },
+      { lane: 'Todos', action: 'Actualizan estándar, formulario o regla para evitar repetición.' },
     ],
   },
 ];
