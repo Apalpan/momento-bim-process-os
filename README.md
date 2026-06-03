@@ -23,7 +23,29 @@ Este repo no pertenece a TrainerMath. Es un producto independiente para:
 - Caso RFI: procedimiento completo de gestion de consultas tecnicas en obra.
 - Mejora y estandar: laboratorio de rediseño, checklist de madurez y capas minimas para implementar el estandar.
 - Metricas y ficha: indicadores de control y ficha final que debe entregar cada equipo.
-- Guia docente: dinamica de taller para que participantes mapeen procesos reales.
+- Guia docente: dinamica de taller para que participantes mapeen procesos reales y propongan mejora del caso.
+
+## Metodo de flujo en 10 pasos
+
+1. Elegir el proceso a mapear.
+2. Definir los swimlanes o involucrados.
+3. Listar todos los pasos sin orden.
+4. Asignar cada paso a un rol o swimlane.
+5. Ordenar y conectar con flechas.
+6. Identificar decisiones de tipo Si/No.
+7. Marcar herramientas usadas en cada paso.
+8. Definir el output o evidencia de cada paso.
+9. Senalar cuello de botella.
+10. Definir el FIN y criterio de cierre.
+
+## Taller de mejora del caso RFI
+
+El taller guia al equipo para comparar mapa actual vs. mapa objetivo, identificar dolores, proponer mejoras y convertirlas en estandar operativo:
+
+- mapa actual con canales informales, retornos y esperas;
+- mapa objetivo con CDE como fuente oficial;
+- formulario, log, estados, matriz RACI y evidencia obligatoria;
+- control semanal de abiertas, vencidas, incompletas, duplicadas, derivadas a RFI/SDI y restricciones asociadas.
 
 ## Ejecutar
 

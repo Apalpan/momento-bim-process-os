@@ -34,6 +34,7 @@ import {
   rfiMetrics,
   rfiNodes,
   standardLayers,
+  workshopConsiderations,
   type ImprovementLever,
   type MappingStep,
   type PainDiagnostic,
@@ -586,9 +587,52 @@ function MethodSection({
       <SectionHero
         icon={BookOpen}
         eyebrow="Método de enseñanza"
-        title="Cómo explicar el mapeo de procesos en obra"
-        text="El instructor debe mover al equipo desde opiniones generales hacia hechos: inicio, rol, dato, decisión, evidencia, dolor, mejora y métrica."
+        title="Cómo construir un flujo: 10 pasos para el taller"
+        text="El instructor debe llevar al equipo desde una conversación desordenada hacia un flujo visible: proceso, swimlanes, pasos, roles, flechas, decisiones, herramientas, evidencias, cuello de botella y cierre."
       />
+
+      <div className="panel flow-build-panel">
+        <PanelHeader icon={ListChecks} label="Secuencia base GEN+" title="Cómo construir un flujo — 10 pasos" />
+        <div className="flow-build-grid">
+          {mappingSteps.map((step, index) => (
+            <button
+              className={step.id === activeStepId ? 'flow-build-step flow-build-step--active' : 'flow-build-step'}
+              key={step.id}
+              onClick={() => setActiveStepId(step.id)}
+              type="button"
+            >
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{step.title}</strong>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel method-active-panel">
+        <PanelHeader icon={Target} label="Paso seleccionado" title={mappingSteps.find((step) => step.id === activeStepId)?.title ?? mappingSteps[0].title} />
+        {mappingSteps
+          .filter((step) => step.id === activeStepId)
+          .map((step) => (
+            <div className="method-active-grid" key={step.id}>
+              <article>
+                <span>Cómo explicarlo</span>
+                <p>{step.teacher}</p>
+              </article>
+              <article>
+                <span>Pregunta docente</span>
+                <p>{step.prompt}</p>
+              </article>
+              <article>
+                <span>Salida esperada</span>
+                <p>{step.output}</p>
+              </article>
+              <article>
+                <span>Aplicación al caso RFI</span>
+                <p>{step.example}</p>
+              </article>
+            </div>
+          ))}
+      </div>
 
       <div className="method-grid">
         {mappingSteps.map((step, index) => (
@@ -814,12 +858,12 @@ function WorkshopSection() {
 
       <div className="workshop-grid">
         {[
-          ['01', 'Elegir un proceso real', 'Cada grupo selecciona un flujo frecuente y problemático: RFI, planos, submittals, incidencias o evidencia.'],
-          ['02', 'Describir el dolor', 'Antes de dibujar, describen qué se repite, cuánto tiempo se pierde, quién se afecta y qué evidencia se pierde.'],
-          ['03', 'Mapear el proceso actual', 'Dibujan cómo ocurre hoy, aunque sea desordenado. No se dibuja el proceso ideal.'],
-          ['04', 'Marcar puntos críticos', 'Identifican esperas, retrabajos, duplicidades, responsables ausentes, canales informales y decisiones ambiguas.'],
-          ['05', 'Rediseñar el proceso', 'Definen menos pasos, campos obligatorios, responsables, plazos, CDE y evidencias de cierre.'],
-          ['06', 'Definir controles', 'Cierran con responsable, métrica principal, frecuencia de revisión, herramienta y fecha de implementación.'],
+          ['01', 'Preparar el caso', 'Se presenta el flujo RFI actual y se aclara que el objetivo no es dibujar bonito, sino encontrar espera, reproceso y pérdida de evidencia.'],
+          ['02', 'Construir el flujo', 'Los equipos aplican los 10 pasos: proceso, swimlanes, pasos sin orden, roles, flechas, decisiones, herramientas, outputs, cuello y cierre.'],
+          ['03', 'Leer el dolor', 'Cada grupo marca en rojo los pasos donde hay consulta incompleta, responsable ausente, herramienta dispersa o cierre débil.'],
+          ['04', 'Diseñar mejora', 'Aplican palancas: eliminar, simplificar, estandarizar, digitalizar, automatizar y controlar.'],
+          ['05', 'Convertir en estándar', 'Definen formulario, estados, owner, SLA, CDE, evidencias obligatorias y criterio de cierre.'],
+          ['06', 'Definir adopción', 'Cierran con responsable, métrica, frecuencia de revisión, tablero y primera acción para implementar en obra.'],
         ].map(([id, title, text]) => (
           <article key={id}>
             <span>{id}</span>
@@ -827,6 +871,44 @@ function WorkshopSection() {
             <p>{text}</p>
           </article>
         ))}
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={ClipboardCheck} label="Consideraciones para el taller de mejora" title="Qué debe cuidar el instructor mientras el equipo mapea" />
+        <div className="consideration-grid">
+          {workshopConsiderations.map((item) => (
+            <article key={item.id}>
+              <h3>{item.title}</h3>
+              <p>{item.purpose}</p>
+              <div>
+                <span>Movimiento docente</span>
+                <strong>{item.facilitatorMove}</strong>
+              </div>
+              <div>
+                <span>Foco RFI</span>
+                <strong>{item.rfiFocus}</strong>
+              </div>
+              <small>{item.expectedEvidence}</small>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={Workflow} label="Entregable de grupo" title="Mapa mejorado del caso RFI" />
+        <div className="case-improvement-board">
+          {[
+            ['Mapa actual', 'Flujo real con chats, correos, pasos omitidos, retornos, esperas y responsables difusos.'],
+            ['Mapa objetivo', 'Flujo con CDE como fuente oficial, campos obligatorios, estados, responsables y decisiones Sí/No.'],
+            ['Estándar mínimo', 'Formulario de consulta, log, matriz RACI, nomenclatura, evidencia por paso y criterio de cierre.'],
+            ['Control semanal', 'Revisión de abiertas, vencidas, incompletas, duplicadas, derivadas a RFI/SDI y restricciones asociadas.'],
+          ].map(([title, text]) => (
+            <article key={title}>
+              <span>{title}</span>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
       </div>
 
       <div className="panel">

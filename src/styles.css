@@ -1356,6 +1356,137 @@ button {
   margin-bottom: 16px;
 }
 
+.flow-build-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(239, 246, 255, 0.92)),
+    #fff;
+}
+
+.flow-build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 30px;
+}
+
+.flow-build-step {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  min-height: 86px;
+  border: 1px solid #dfe8f6;
+  border-radius: 0;
+  overflow: hidden;
+  background: #eaf1ff;
+  color: var(--gen-deep-blue);
+  text-align: left;
+  transition: 160ms ease;
+}
+
+.flow-build-step span {
+  display: grid;
+  place-items: center;
+  background: var(--gen-primary);
+  color: #fff;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.flow-build-step strong {
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.flow-build-step--active {
+  border-color: rgba(33, 101, 255, 0.62);
+  background: #f7fbff;
+  box-shadow: 0 16px 38px rgba(33, 101, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.method-active-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.method-active-grid article,
+.consideration-grid article,
+.case-improvement-board article {
+  border: 1px solid #e3ebf7;
+  border-radius: 14px;
+  padding: 15px;
+  background: #fbfdff;
+}
+
+.method-active-grid span,
+.consideration-grid span,
+.case-improvement-board span {
+  color: var(--gen-primary);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.method-active-grid p,
+.consideration-grid p,
+.case-improvement-board p {
+  margin: 8px 0 0;
+  color: var(--gen-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.consideration-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.consideration-grid article {
+  display: grid;
+  gap: 12px;
+}
+
+.consideration-grid h3 {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.consideration-grid div {
+  border-top: 1px solid #e6edf7;
+  padding-top: 10px;
+}
+
+.consideration-grid strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--gen-deep-blue);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.consideration-grid small {
+  display: block;
+  border-radius: 12px;
+  padding: 10px;
+  background: #eef5ff;
+  color: var(--gen-primary);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.case-improvement-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .pain-lab {
   display: grid;
   grid-template-columns: 330px minmax(0, 1fr) minmax(320px, 0.75fr);
@@ -1926,7 +2057,10 @@ button {
   .roadmap,
   .ai-pipeline,
   .maturity-grid,
-  .learning-loop {
+  .learning-loop,
+  .method-active-grid,
+  .consideration-grid,
+  .case-improvement-board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1939,7 +2073,8 @@ button {
   .pain-chain,
   .diagnosis-path,
   .lever-grid,
-  .standard-facts {
+  .standard-facts,
+  .flow-build-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -1975,7 +2110,11 @@ button {
     .learning-loop,
     .lever-grid,
     .standard-facts,
-    .maturity-grid {
+    .maturity-grid,
+    .method-active-grid,
+    .consideration-grid,
+    .case-improvement-board,
+    .flow-build-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2023,6 +2162,11 @@ button {
 
   .before-after > svg {
     transform: rotate(90deg);
+  }
+
+  .flow-build-step {
+    grid-template-columns: 56px minmax(0, 1fr);
+    min-height: 74px;
   }
 
   .topbar h1 {
