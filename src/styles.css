@@ -1502,10 +1502,13 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  align-items: start;
 }
 
 .area-flow-card {
   display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
   gap: 16px;
   border: 1px solid #dfe8f6;
   border-radius: 18px;
