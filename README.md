@@ -19,9 +19,10 @@ Este repo no pertenece a TrainerMath. Es un producto independiente para:
 ## Modulos interactivos
 
 - Diagnostico del dolor: seleccion de sintomas y lectura de impacto, senal en el mapa, mejora, estandar y metrica.
-- Mapeador interactivo: metodo de 10 pasos conectado con el flujo RFI y nodos clickeables por carril.
+- Mapeador interactivo: metodo de 10 pasos conectado con el flujo RFI, nodos clickeables por carril y panel de criterio activo.
 - Caso RFI: procedimiento completo de gestion de consultas tecnicas en obra.
 - Caso RFI por areas: lectura de referencia generica, propuesta objetivo GEN+, proceso ejemplo actual y proceso propuesto como debe ser usando Campo/Produccion, Oficina Tecnica, Area BIM, Area de Diseno, Area de Proyectos y Area de Calidad.
+- Ideas clave: criterios expertos, notas y tips para mejorar el juicio de mapeo sin recargar la experiencia.
 - Mejora y estandar: laboratorio de rediseño, checklist de madurez y capas minimas para implementar el estandar.
 - Metricas y ficha: indicadores de control y ficha final que debe entregar cada equipo.
 - Guia de mapeo: consideraciones, brainstorming, feedback esperado y dinamica para que participantes mapeen procesos reales y propongan mejora del caso.

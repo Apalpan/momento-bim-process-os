@@ -987,6 +987,148 @@ button {
   line-height: 1.45;
 }
 
+.insight-panel {
+  background:
+    linear-gradient(135deg, rgba(10, 36, 76, 0.98), rgba(4, 15, 32, 0.96)),
+    var(--gen-nav-dark);
+  color: #fff;
+}
+
+.insight-panel .panel-header h2,
+.insight-panel .panel-header div {
+  color: #fff;
+}
+
+.insight-ribbon {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.insight-ribbon article {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.insight-ribbon span {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.28;
+}
+
+.insight-ribbon p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.active-criterion-panel {
+  border-color: rgba(33, 101, 255, 0.22);
+  background:
+    linear-gradient(135deg, #ffffff, #f3f7ff),
+    #fff;
+}
+
+.criterion-command {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.criterion-command article {
+  border: 1px solid #dfe8f6;
+  border-radius: 14px;
+  padding: 13px;
+  background: #fbfdff;
+}
+
+.criterion-command span,
+.criterion-card span,
+.criterion-note strong,
+.expert-note-grid span {
+  color: var(--gen-primary);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.criterion-command strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--gen-deep-blue);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.criterion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.criterion-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #e3ebf7;
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+}
+
+.criterion-card p {
+  margin: 0;
+  color: var(--gen-muted);
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.criterion-card--focus {
+  border-color: rgba(33, 101, 255, 0.28);
+  background: #eef5ff;
+}
+
+.criterion-card--focus p,
+.criterion-card--closure p {
+  color: var(--gen-deep-blue);
+  font-weight: 800;
+}
+
+.criterion-card--closure {
+  border-color: rgba(24, 166, 106, 0.3);
+  background: #f2fff8;
+}
+
+.criterion-note {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 14px;
+  border-radius: 14px;
+  padding: 13px;
+  background: rgba(33, 101, 255, 0.08);
+}
+
+.criterion-note svg {
+  color: var(--gen-primary);
+  margin-top: 2px;
+}
+
+.criterion-note p {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .rfi-board {
   display: grid;
   gap: 12px;
@@ -1855,6 +1997,49 @@ button {
   line-height: 1.45;
 }
 
+.expert-note-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.expert-note-grid article {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #e3ebf7;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fbfdff;
+}
+
+.expert-note-grid h3 {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 15px;
+  line-height: 1.28;
+}
+
+.expert-note-grid p {
+  margin: 0;
+  color: var(--gen-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.expert-note-grid div {
+  border-radius: 12px;
+  padding: 11px;
+  background: #eef5ff;
+}
+
+.expert-note-grid strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--gen-deep-blue);
+  font-size: 12px;
+  line-height: 1.42;
+}
+
 .pain-lab {
   display: grid;
   grid-template-columns: 330px minmax(0, 1fr) minmax(320px, 0.75fr);
@@ -2434,7 +2619,10 @@ button {
   .consideration-grid,
   .case-improvement-board,
   .brainstorm-grid,
-  .reference-signal-grid {
+  .reference-signal-grid,
+  .insight-ribbon,
+  .criterion-grid,
+  .expert-note-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2448,7 +2636,8 @@ button {
   .diagnosis-path,
   .lever-grid,
   .standard-facts,
-  .flow-build-grid {
+  .flow-build-grid,
+  .criterion-command {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -2491,7 +2680,11 @@ button {
     .flow-build-grid,
     .brainstorm-grid,
     .reference-signal-grid,
-    .target-phase-grid {
+    .target-phase-grid,
+    .insight-ribbon,
+    .criterion-command,
+    .criterion-grid,
+    .expert-note-grid {
     grid-template-columns: 1fr;
   }
 

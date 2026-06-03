@@ -24,6 +24,7 @@ import { useMemo, useState } from 'react';
 import {
   caseExamples,
   executiveSignals,
+  expertMappingInsights,
   improvementLevers,
   kpis,
   mappingSteps,
@@ -270,6 +271,18 @@ function ExecutiveOverview({ setActiveSection }: { setActiveSection: (section: S
         ))}
       </div>
 
+      <div className="panel insight-panel">
+        <PanelHeader icon={Lightbulb} label="Ideas clave" title="Criterios que elevan la calidad del mapeo" />
+        <div className="insight-ribbon">
+          {expertMappingInsights.map((insight) => (
+            <article key={insight.id}>
+              <span>{insight.principle}</span>
+              <p>{insight.criterion}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
       <div className="dashboard-grid dashboard-grid--two">
         <div className="panel">
           <PanelHeader icon={ShieldCheck} label="Lectura ejecutiva" title="Qué debe quedar claro" />
@@ -455,6 +468,8 @@ function InteractiveMapper({
         </div>
       </div>
 
+      <ActiveCriterionPanel activeNode={activeNode} activePain={activePain} activeStep={activeStep} />
+
       <div className="mapper-layout">
         <div className="panel">
           <PanelHeader icon={ListChecks} label="Paso activo" title={activeStep.title} />
@@ -504,6 +519,76 @@ function InteractiveMapper({
 
       <RfiProcessBoard activeNodeId={activeNodeId} setActiveNodeId={setActiveNodeId} />
     </section>
+  );
+}
+
+function ActiveCriterionPanel({
+  activeStep,
+  activeNode,
+  activePain,
+}: {
+  activeStep: MappingStep;
+  activeNode: ProcessNode;
+  activePain: PainDiagnostic;
+}) {
+  const closingCriterion =
+    activeNode.type === 'end'
+      ? 'Cerrar solo cuando exista respuesta oficial, soporte, comunicación, estado final y responsable.'
+      : 'No avances al siguiente paso si falta responsable, evidencia mínima o criterio de decisión.';
+
+  return (
+    <div className="panel active-criterion-panel">
+      <PanelHeader icon={Gauge} label="Criterio activo" title="Qué debes mirar ahora en el mapa" />
+      <div className="criterion-command">
+        <article>
+          <span>Rol seleccionado</span>
+          <strong>{activeNode.lane}</strong>
+        </article>
+        <article>
+          <span>Paso del método</span>
+          <strong>{activeStep.title}</strong>
+        </article>
+        <article>
+          <span>Dolor perseguido</span>
+          <strong>{activePain.pain}</strong>
+        </article>
+      </div>
+
+      <div className="criterion-grid">
+        <article className="criterion-card criterion-card--focus">
+          <span>Pregunta clave</span>
+          <p>{activeStep.prompt}</p>
+        </article>
+        <article className="criterion-card">
+          <span>Evidencia mínima</span>
+          <p>{activeNode.evidence.join(' · ')}</p>
+        </article>
+        <article className="criterion-card">
+          <span>Riesgo si no se controla</span>
+          <p>{activeNode.risk}</p>
+        </article>
+        <article className="criterion-card">
+          <span>Mejora sugerida</span>
+          <p>{activePain.improvement}</p>
+        </article>
+        <article className="criterion-card">
+          <span>Métrica asociada</span>
+          <p>{activePain.metric}</p>
+        </article>
+        <article className="criterion-card criterion-card--closure">
+          <span>Criterio de cierre</span>
+          <p>{closingCriterion}</p>
+        </article>
+      </div>
+
+      <div className="criterion-note">
+        <Lightbulb size={18} />
+        <p>
+          <strong>Nota de criterio:</strong> un buen mapa no busca verse ordenado; busca revelar dónde se pierde información,
+          quién debe decidir y qué evidencia permite controlar el proceso.
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -1023,6 +1108,22 @@ function WorkshopSection() {
               <div>
                 <strong>Feedback esperado</strong>
                 <p>{item.feedback}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={Gauge} label="Criterio experto" title="Reflexiones y tips para mejorar el juicio de mapeo" />
+        <div className="expert-note-grid">
+          {expertMappingInsights.map((insight) => (
+            <article key={insight.id}>
+              <h3>{insight.principle}</h3>
+              <p>{insight.reflection}</p>
+              <div>
+                <span>Tip operativo</span>
+                <strong>{insight.tip}</strong>
               </div>
             </article>
           ))}

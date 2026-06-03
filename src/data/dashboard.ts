@@ -84,6 +84,14 @@ export type BrainstormIdea = {
   feedback: string;
 };
 
+export type ExpertMappingInsight = {
+  id: string;
+  principle: string;
+  criterion: string;
+  reflection: string;
+  tip: string;
+};
+
 export type AreaProcessStep = {
   id: string;
   title: string;
@@ -563,6 +571,51 @@ export const mappingBrainstormIdeas: BrainstormIdea[] = [
       'Comunicación al frente afectado, estado cerrado y responsable de cierre.',
     ],
     feedback: 'El cierre no es “ya respondieron”; el cierre es evidencia completa, trazable y comunicada.',
+  },
+];
+
+export const expertMappingInsights: ExpertMappingInsight[] = [
+  {
+    id: 'decisiones',
+    principle: 'No mapees tareas: mapea decisiones, transferencias y evidencia.',
+    criterion: 'Una actividad aporta valor si cambia estado, produce evidencia o habilita una decisión.',
+    reflection: 'Si solo describes acciones, el mapa se vuelve narrativo; si describes decisiones, el mapa se vuelve gestionable.',
+    tip: 'Marca con color cada punto donde el flujo puede seguir por más de una ruta.',
+  },
+  {
+    id: 'owner',
+    principle: 'Un proceso sin owner es una conversación distribuida.',
+    criterion: 'Cada paso crítico necesita responsable, plazo, entrada mínima y salida verificable.',
+    reflection: 'La ambigüedad no aparece en el diagrama; aparece cuando nadie sabe quién debe cerrar el siguiente paso.',
+    tip: 'Si un paso empieza con “alguien revisa”, todavía no está mapeado.',
+  },
+  {
+    id: 'cierre',
+    principle: 'El cierre no es responder; es respuesta + evidencia + comunicación + estado.',
+    criterion: 'Un cierre válido debe poder auditarse sin preguntarle a la persona que participó.',
+    reflection: 'La trazabilidad se pierde cuando el equipo confunde avance operativo con cierre documental.',
+    tip: 'Define el evento final antes de discutir herramientas.',
+  },
+  {
+    id: 'cde',
+    principle: 'Si la información vive solo en WhatsApp, el proceso no está gobernado.',
+    criterion: 'El canal puede notificar, pero la fuente oficial debe ser CDE, log o repositorio controlado.',
+    reflection: 'Digitalizar no es usar más herramientas; es reducir fuentes paralelas de verdad.',
+    tip: 'Separa canal de comunicación, repositorio oficial y evidencia auditable.',
+  },
+  {
+    id: 'handoff',
+    principle: 'Cada handoff debe tener entrada, salida, responsable y SLA.',
+    criterion: 'Una transferencia débil crea espera, retrabajo o doble interpretación.',
+    reflection: 'El cuello de botella casi siempre vive entre áreas, no dentro de una sola tarea.',
+    tip: 'Revisa qué necesita el siguiente rol para no devolver la consulta.',
+  },
+  {
+    id: 'criterio',
+    principle: 'Una decisión sin criterio solo traslada la ambigüedad al diagrama.',
+    criterion: 'Todo rombo debe tener pregunta Sí/No, criterio, responsable y evidencia de decisión.',
+    reflection: 'El mapa mejora cuando reduce interpretaciones, no cuando agrega más símbolos.',
+    tip: 'Si no puedes escribir la pregunta de decisión, no dibujes el rombo.',
   },
 ];
 
