@@ -27,6 +27,7 @@ import {
   improvementLevers,
   kpis,
   mappingSteps,
+  mappingBrainstormIdeas,
   maturityLevels,
   painDiagnostics,
   painSignals,
@@ -55,7 +56,7 @@ const navItems: { id: SectionId; label: string; icon: typeof LayoutDashboard }[]
   { id: 'metodo', label: 'Método de mapeo', icon: BookOpen },
   { id: 'mejora', label: 'Mejora y estándar', icon: Wrench },
   { id: 'metricas', label: 'Métricas y ficha', icon: BarChart3 },
-  { id: 'taller', label: 'Guía de taller', icon: GraduationCap },
+  { id: 'taller', label: 'Guía de mapeo', icon: GraduationCap },
 ];
 
 const toneIcon: Record<Tone, string> = {
@@ -140,7 +141,7 @@ function App() {
         <div className="sidebar-panel">
           <span>Caso principal</span>
           <strong>Gestión de consultas técnicas / RFI</strong>
-          <p>Usar este flujo para enseñar inicio, carriles, decisiones, evidencia, CDE y métricas.</p>
+          <p>Usar este flujo para revisar inicio, carriles, decisiones, evidencia, CDE y métricas.</p>
         </div>
       </aside>
 
@@ -214,7 +215,7 @@ function ExecutiveOverview({ setActiveSection }: { setActiveSection: (section: S
           <span className="eyebrow">Mapeo de procesos en obra</span>
           <h2>No podemos mejorar lo que no vemos.</h2>
           <p>
-            Este workbench enseña a mapear procesos reales de obra, usando la gestión de consultas
+            Este workbench guía el mapeo de procesos reales de obra, usando la gestión de consultas
             técnicas/RFI como caso principal para convertir dudas, documentos, responsables y evidencias en flujo controlado.
           </p>
           <div className="action-row">
@@ -412,7 +413,7 @@ function InteractiveMapper({
         icon={Workflow}
         eyebrow="Mapeador interactivo"
         title="Haz clic en un paso del método y en un nodo del proceso"
-        text="La dinámica muestra cómo se enseña a mapear: primero se entiende el método, luego se lee el flujo RFI y finalmente se conecta cada nodo con evidencia, riesgo y decisión."
+        text="La dinámica muestra cómo mapear mejor: primero se entiende el método, luego se lee el flujo RFI y finalmente se conecta cada nodo con evidencia, riesgo y decisión."
       />
 
       <div className="learning-loop">
@@ -458,7 +459,7 @@ function InteractiveMapper({
           <div className="step-detail">
             <p>{activeStep.teacher}</p>
             <div>
-              <span>Pregunta para facilitar</span>
+              <span>Pregunta clave</span>
               <strong>{activeStep.prompt}</strong>
             </div>
             <div>
@@ -633,9 +634,9 @@ function MethodSection({
     <section className="section-stack">
       <SectionHero
         icon={BookOpen}
-        eyebrow="Método de enseñanza"
-        title="Cómo construir un flujo: 10 pasos para el taller"
-        text="El instructor debe llevar al equipo desde una conversación desordenada hacia un flujo visible: proceso, swimlanes, pasos, roles, flechas, decisiones, herramientas, evidencias, cuello de botella y cierre."
+        eyebrow="Método de mapeo"
+        title="Cómo construir un flujo: 10 pasos de mapeo"
+        text="El objetivo es pasar de una conversación desordenada a un flujo visible: proceso, swimlanes, pasos, roles, flechas, decisiones, herramientas, evidencias, cuello de botella y cierre."
       />
 
       <div className="panel flow-build-panel">
@@ -666,7 +667,7 @@ function MethodSection({
                 <p>{step.teacher}</p>
               </article>
               <article>
-                <span>Pregunta docente</span>
+                <span>Pregunta clave</span>
                 <p>{step.prompt}</p>
               </article>
               <article>
@@ -879,7 +880,7 @@ function MetricsSection() {
       </div>
 
       <div className="panel">
-        <PanelHeader icon={FileText} label="Producto final del taller" title="Ficha de proceso que debe entregar cada equipo" />
+        <PanelHeader icon={FileText} label="Producto final del mapeo" title="Ficha de proceso que debe completar cada equipo" />
         <div className="sheet-grid">
           {processSheet.map(([field, value]) => (
             <article key={field}>
@@ -898,9 +899,9 @@ function WorkshopSection() {
     <section className="section-stack">
       <SectionHero
         icon={GraduationCap}
-        eyebrow="Guía docente"
-        title="Dinámica de taller: mapear el dolor"
-        text="La clase debe partir de un proceso que los participantes viven todos los días. El aprendizaje aparece cuando reconocen sus propios puntos de espera, reproceso y falta de evidencia."
+        eyebrow="Guía de mapeo"
+        title="Qué tener en cuenta para mapear y mejorar el proceso"
+        text="El punto de partida debe ser un proceso real que el equipo vive todos los días. El valor aparece cuando se reconocen esperas, reprocesos, responsables difusos, decisiones informales y evidencia perdida."
       />
 
       <div className="workshop-grid">
@@ -921,21 +922,42 @@ function WorkshopSection() {
       </div>
 
       <div className="panel">
-        <PanelHeader icon={ClipboardCheck} label="Consideraciones para el taller de mejora" title="Qué debe cuidar el instructor mientras el equipo mapea" />
+        <PanelHeader icon={ClipboardCheck} label="Consideraciones de mapeo" title="Qué se debe tener en cuenta al mejorar el proceso" />
         <div className="consideration-grid">
           {workshopConsiderations.map((item) => (
             <article key={item.id}>
               <h3>{item.title}</h3>
               <p>{item.purpose}</p>
               <div>
-                <span>Movimiento docente</span>
-                <strong>{item.facilitatorMove}</strong>
+                <span>Acción de mapeo</span>
+                <strong>{item.mappingAction}</strong>
               </div>
               <div>
                 <span>Foco RFI</span>
                 <strong>{item.rfiFocus}</strong>
               </div>
               <small>{item.expectedEvidence}</small>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel">
+        <PanelHeader icon={Lightbulb} label="Brainstorming" title="Ideas y preguntas para mapear mejor el proceso" />
+        <div className="brainstorm-grid">
+          {mappingBrainstormIdeas.map((item) => (
+            <article className="brainstorm-card" key={item.id}>
+              <span>{item.title}</span>
+              <h3>{item.question}</h3>
+              <ul>
+                {item.ideas.map((idea) => (
+                  <li key={idea}>{idea}</li>
+                ))}
+              </ul>
+              <div>
+                <strong>Feedback esperado</strong>
+                <p>{item.feedback}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -959,7 +981,7 @@ function WorkshopSection() {
       </div>
 
       <div className="panel">
-        <PanelHeader icon={AlertTriangle} label="Preguntas de facilitación" title="Preguntas para encontrar el proceso real" />
+        <PanelHeader icon={AlertTriangle} label="Preguntas guía" title="Preguntas para encontrar el proceso real" />
         <div className="question-bank">
           {[
             '¿Dónde empieza realmente el flujo y qué evento lo dispara?',

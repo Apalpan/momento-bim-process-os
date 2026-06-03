@@ -1624,6 +1624,74 @@ button {
   gap: 12px;
 }
 
+.brainstorm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.brainstorm-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #e3ebf7;
+  border-radius: 14px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, #fbfdff, #f6f9ff);
+}
+
+.brainstorm-card > span {
+  color: var(--gen-primary);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brainstorm-card h3 {
+  margin: 0;
+  color: var(--gen-deep-blue);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.brainstorm-card ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.brainstorm-card li {
+  color: var(--gen-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.brainstorm-card div {
+  border: 1px solid rgba(33, 101, 255, 0.16);
+  border-radius: 12px;
+  padding: 12px;
+  background: #eef5ff;
+}
+
+.brainstorm-card strong {
+  display: block;
+  color: var(--gen-primary);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brainstorm-card p {
+  margin: 6px 0 0;
+  color: var(--gen-deep-blue);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
 .pain-lab {
   display: grid;
   grid-template-columns: 330px minmax(0, 1fr) minmax(320px, 0.75fr);
@@ -2198,7 +2266,8 @@ button {
   .learning-loop,
   .method-active-grid,
   .consideration-grid,
-  .case-improvement-board {
+  .case-improvement-board,
+  .brainstorm-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2252,7 +2321,8 @@ button {
     .method-active-grid,
     .consideration-grid,
     .case-improvement-board,
-    .flow-build-grid {
+    .flow-build-grid,
+    .brainstorm-grid {
     grid-template-columns: 1fr;
   }
 

@@ -71,9 +71,17 @@ export type WorkshopConsideration = {
   id: string;
   title: string;
   purpose: string;
-  facilitatorMove: string;
+  mappingAction: string;
   rfiFocus: string;
   expectedEvidence: string;
+};
+
+export type BrainstormIdea = {
+  id: string;
+  title: string;
+  question: string;
+  ideas: string[];
+  feedback: string;
 };
 
 export type AreaProcessStep = {
@@ -112,7 +120,7 @@ export type Flow = {
     lane: string;
     steps: string[];
   }[];
-  instructorQuestions: string[];
+  mappingQuestions: string[];
 };
 
 export type CaseExample = {
@@ -138,7 +146,7 @@ export const kpis: Kpi[] = [
   {
     label: 'Proceso principal',
     value: 'RFI',
-    detail: 'Gestión de consultas técnicas como caso base para enseñar mapeo campo-oficina.',
+    detail: 'Gestión de consultas técnicas como caso base para practicar mapeo campo-oficina.',
     status: 'Caso rector',
     tone: 'blue',
   },
@@ -146,7 +154,7 @@ export const kpis: Kpi[] = [
     label: 'Pasos de mapeo',
     value: '10',
     detail: 'Elegir proceso, swimlanes, pasos sin orden, rol, flechas, decisiones, herramientas, evidencia, cuello de botella y cierre.',
-    status: 'Método de clase',
+    status: 'Método práctico',
     tone: 'green',
   },
   {
@@ -422,7 +430,7 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'no-partir-del-ideal',
     title: 'Mapear primero el flujo real',
     purpose: 'Evitar que el equipo dibuje el proceso que “debería” existir y no el que realmente usa en obra.',
-    facilitatorMove: 'Pedir ejemplos concretos de la última consulta técnica: quién la detectó, por dónde se envió, quién respondió y dónde quedó guardada.',
+    mappingAction: 'Tomar un caso reciente y reconstruirlo con hechos: quién detectó, por dónde se envió, quién respondió, qué evidencia quedó y dónde se cerró.',
     rfiFocus: 'Diferenciar consulta verbal, consulta registrada, RFI formal y cambio con impacto.',
     expectedEvidence: 'Mapa actual con canales informales, retornos, esperas y puntos sin evidencia.',
   },
@@ -430,7 +438,7 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'listar-sin-orden',
     title: 'Listar sin ordenar para revelar omisiones',
     purpose: 'Capturar todas las acciones antes de imponer secuencia. Esto muestra pasos invisibles como buscar versión, pedir foto o perseguir responsables.',
-    facilitatorMove: 'Usar notas rápidas: una actividad por tarjeta, con verbo + objeto. No discutir todavía si está bien o mal.',
+    mappingAction: 'Usar notas rápidas: una actividad por tarjeta, con verbo + objeto. Primero capturar todo; luego ordenar, filtrar y mejorar.',
     rfiFocus: 'Incluir pasos ocultos: revisar plano vigente, pedir ubicación, confirmar especialidad, buscar historial y validar impacto.',
     expectedEvidence: 'Inventario bruto de actividades y dolores asociados a cada paso.',
   },
@@ -438,7 +446,7 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'roles-no-personas',
     title: 'Asignar roles, no nombres',
     purpose: 'Hacer que el estándar funcione aunque cambien personas o equipos.',
-    facilitatorMove: 'Cambiar nombres propios por roles: Campo, Oficina Técnica/BIM, Especialista, CDE, Supervisión/Gerencia.',
+    mappingAction: 'Cambiar nombres propios por roles y áreas: Campo, Oficina Técnica, BIM, Diseño, Proyectos y Calidad.',
     rfiFocus: 'Definir quién registra, quién valida completitud, quién responde, quién aprueba impacto y quién cierra.',
     expectedEvidence: 'Swimlanes claros y matriz mínima de responsabilidad por etapa.',
   },
@@ -446,7 +454,7 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'decision-con-criterio',
     title: 'Toda decisión necesita criterio',
     purpose: 'Evitar rombos decorativos que no cambian el camino o que nadie sabe responder.',
-    facilitatorMove: 'Convertir cada decisión en pregunta Sí/No y exigir criterio, dueño y evidencia.',
+    mappingAction: 'Convertir cada decisión en una pregunta Sí/No con criterio, responsable, evidencia y ruta siguiente.',
     rfiFocus: 'Las tres decisiones críticas son: se resuelve con información disponible, está completa y requiere cambio formal o impacto mayor.',
     expectedEvidence: 'Decisiones con rutas Sí/No, criterio de evaluación y responsable de decisión.',
   },
@@ -454,7 +462,7 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'herramientas-trazabilidad',
     title: 'Las herramientas revelan trazabilidad',
     purpose: 'Ver si la información vive en CDE o se dispersa entre WhatsApp, correo, Excel, planos locales y reuniones.',
-    facilitatorMove: 'Marcar en cada paso qué herramienta se usa y si esa herramienta deja evidencia auditable.',
+    mappingAction: 'Marcar en cada paso qué herramienta se usa, si deja evidencia auditable y si debe migrar al CDE.',
     rfiFocus: 'CDE/Build debe ser el registro maestro; chats o correos solo pueden notificar o complementar.',
     expectedEvidence: 'Mapa con herramienta por paso y riesgos de dispersión documental.',
   },
@@ -462,9 +470,78 @@ export const workshopConsiderations: WorkshopConsideration[] = [
     id: 'cierre-auditable',
     title: 'El cierre debe ser auditable',
     purpose: 'Evitar que el proceso termine cuando alguien “ya respondió” pero nadie puede probar comunicación, aplicación o archivo.',
-    facilitatorMove: 'Preguntar qué documento, estado, responsable y evidencia prueban que el proceso terminó.',
+    mappingAction: 'Definir documento, estado, responsable y evidencia mínima para probar que el proceso terminó correctamente.',
     rfiFocus: 'Una RFI/consulta se cierra solo con respuesta oficial, soporte, comunicación al equipo y estado actualizado en CDE.',
     expectedEvidence: 'Criterio de cierre, evidencias obligatorias y métrica de control.',
+  },
+];
+
+export const mappingBrainstormIdeas: BrainstormIdea[] = [
+  {
+    id: 'entradas',
+    title: 'Entradas mínimas',
+    question: '¿Qué información debe existir para que la consulta no rebote?',
+    ideas: [
+      'Código de consulta, fecha, frente, ubicación, nivel/eje y especialidad.',
+      'Plano/modelo/especificación vigente con revisión visible.',
+      'Foto, descripción del problema e impacto esperado en producción.',
+    ],
+    feedback: 'Si una consulta puede registrarse sin estos datos, el proceso está diseñado para generar retrabajo.',
+  },
+  {
+    id: 'roles',
+    title: 'Responsables y handoffs',
+    question: '¿Dónde cambia la responsabilidad entre áreas?',
+    ideas: [
+      'Campo levanta evidencia; Oficina Técnica valida y clasifica.',
+      'BIM verifica modelo y versión; Diseño responde técnicamente.',
+      'Proyectos evalúa impacto; Calidad controla evidencia y cierre.',
+    ],
+    feedback: 'Cada handoff debe tener entrada, salida, responsable, plazo y evidencia. Si falta uno, aparecerá espera.',
+  },
+  {
+    id: 'decisiones',
+    title: 'Decisiones críticas',
+    question: '¿Qué preguntas cambian el camino del flujo?',
+    ideas: [
+      '¿Se resuelve con información disponible?',
+      '¿La consulta está completa y válida?',
+      '¿Requiere cambio formal, RFI/SDI o evaluación de impacto?',
+    ],
+    feedback: 'Una decisión sin criterio no ayuda a mapear; solo traslada la ambigüedad al diagrama.',
+  },
+  {
+    id: 'herramientas',
+    title: 'Herramientas y trazabilidad',
+    question: '¿Dónde vive la información y cuál es la fuente oficial?',
+    ideas: [
+      'Separar canal de notificación de repositorio oficial.',
+      'Usar CDE/Build como registro maestro del flujo.',
+      'Evitar que WhatsApp, correo o Excel sean la única evidencia.',
+    ],
+    feedback: 'Si una respuesta existe pero no se puede encontrar, el proceso no está controlado.',
+  },
+  {
+    id: 'cuellos',
+    title: 'Cuellos de botella',
+    question: '¿Dónde se detiene, rebota o duplica el trabajo?',
+    ideas: [
+      'Consultas incompletas que vuelven a Campo.',
+      'BIM revisa versiones sin link oficial.',
+      'Diseño responde sin criterio de impacto y Proyectos se entera tarde.',
+    ],
+    feedback: 'El cuello de botella debe convertirse en regla, campo obligatorio, SLA, automatización o control semanal.',
+  },
+  {
+    id: 'cierre',
+    title: 'Cierre verificable',
+    question: '¿Qué prueba que la consulta terminó bien?',
+    ideas: [
+      'Respuesta oficial vinculada al código de consulta.',
+      'Soporte técnico/documental guardado en CDE.',
+      'Comunicación al frente afectado, estado cerrado y responsable de cierre.',
+    ],
+    feedback: 'El cierre no es “ya respondieron”; el cierre es evidencia completa, trazable y comunicada.',
   },
 ];
 
@@ -979,7 +1056,7 @@ export const flows: Flow[] = [
       { lane: 'Área de Proyectos', steps: ['Evaluar impacto costo/plazo/alcance', 'Autorizar RFI/SDI si aplica', 'Gestionar escalamiento'] },
       { lane: 'Área de Calidad', steps: ['Verificar evidencia', 'Comunicar solución oficial', 'Cerrar y medir'] },
     ],
-    instructorQuestions: [
+    mappingQuestions: [
       '¿Qué dato mínimo debe traer una consulta para no rebotar?',
       '¿Cuándo una duda se convierte en RFI formal?',
       '¿Qué evidencia prueba que la respuesta fue comunicada y aplicada?',
@@ -1005,7 +1082,7 @@ export const flows: Flow[] = [
       { lane: 'Área de Proyectos', steps: ['Evalúa impacto', 'Autoriza emisión', 'Controla plazo'] },
       { lane: 'Área de Calidad', steps: ['Valida código', 'Publica en CDE', 'Marca obsoleto'] },
     ],
-    instructorQuestions: [
+    mappingQuestions: [
       '¿Cuál es la fuente única de verdad de un plano vigente?',
       '¿Qué ocurre con la versión anterior?',
       '¿Cómo se comunica el cambio a producción?',
